@@ -1,0 +1,17 @@
+# repository
+node_modules/
+/plugin.js
+/plugin.d.ts
+*.tgz
+
+# log files
+logs
+*.log
+*-debug.log*
+report.*.json
+
+
+# package lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

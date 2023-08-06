@@ -1,0 +1,57 @@
+{
+	"name": "prettier-plugin-imports",
+	"private": false,
+	"version": "4.2.8",
+	"description": "A prettier plugins to sort imports in provided RegEx order",
+	"main": "plugin.js",
+	"types": "plugin.d.ts",
+	"repository": "github:graygalaxy/prettier-plugin-imports",
+	"scripts": {
+		"prepare": "npm run build",
+		"build": "tsup",
+		"test": "vitest --run",
+		"test:type": "tsc --noEmit",
+		"test:watch": "vitest",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check",
+		"prepack": "npm run build"
+	},
+	"keywords": [
+		"prettier",
+		"plugin",
+		"sort",
+		"import",
+		"typescript",
+		"javascript"
+	],
+	"license": "MIT",
+	"dependencies": {
+		"@babel/core": "7.22.9",
+		"@babel/generator": "7.22.9",
+		"@babel/parser": "7.22.7",
+		"@babel/traverse": "7.22.8",
+		"@babel/types": "7.22.5",
+		"semver": "7.5.4"
+	},
+	"devDependencies": {
+		"@types/babel__generator": "^7.6.0",
+		"@types/babel__traverse": "^7.20.0",
+		"@types/node": "^18.0.0",
+		"@types/prettier": "^2.7.3",
+		"@types/semver": "^7.5.0",
+		"@vue/compiler-sfc": "^3.3.4",
+		"prettier": "^3.0.1",
+		"tsup": "^7.2.0",
+		"typescript": "^5.1.0",
+		"vitest": "^0.34.1"
+	},
+	"peerDependencies": {
+		"@vue/compiler-sfc": ">=3.0.0",
+		"prettier": "2 || 3"
+	},
+	"peerDependenciesMeta": {
+		"@vue/compiler-sfc": {
+			"optional": true
+		}
+	}
+}

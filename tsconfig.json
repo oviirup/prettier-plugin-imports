@@ -1,0 +1,17 @@
+// Based on node 16 config: https://github.com/tsconfig/bases/blob/main/bases/node16.json
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"allowJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"noEmit": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "ES2021"
+	},
+	"exclude": ["node_modules"],
+	"include": ["./source/**/*.ts"]
+}
