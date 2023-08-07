@@ -3,8 +3,7 @@ node_modules
 .idea
 coverage
 build
-/plugin.js
-/plugin.d.ts
+/plugin.*
 *.tgz
 
 # log files

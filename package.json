@@ -1,30 +1,36 @@
 {
 	"name": "prettier-plugin-imports",
-	"private": false,
 	"version": "4.2.8",
+	"private": false,
 	"description": "A prettier plugins to sort imports in provided RegEx order",
-	"main": "plugin.js",
-	"types": "plugin.d.ts",
+	"license": "MIT",
 	"repository": "github:graygalaxy/prettier-plugin-imports",
+	"author": "Avirup Ghosh (https://github.com/graygalaxy)",
+	"main": "plugin.js",
+	"module": "plugin.mjs",
+	"types": "plugin.d.ts",
 	"scripts": {
 		"prepare": "npm run build",
-		"build": "tsup",
-		"test": "vitest --run",
-		"test:type": "tsc --noEmit",
-		"test:watch": "vitest",
+		"build": "tsup --minify",
+		"build:watch": "tsup --watch",
 		"format": "prettier . --write",
 		"format:check": "prettier . --check",
-		"prepack": "npm run build"
+		"test": "vitest --run",
+		"test:type": "tsc --noEmit",
+		"test:watch": "vitest"
 	},
+	"files": [
+		"plugin.*"
+	],
 	"keywords": [
 		"prettier",
 		"plugin",
 		"sort",
+		"organize",
 		"import",
 		"typescript",
 		"javascript"
 	],
-	"license": "MIT",
 	"dependencies": {
 		"@babel/core": "7.22.9",
 		"@babel/generator": "7.22.9",
