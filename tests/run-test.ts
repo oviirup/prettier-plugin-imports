@@ -1,16 +1,19 @@
 'use strict'
 
 import fs from 'fs'
-import { extname } from 'path'
+import { extname, resolve } from 'path'
 import { format } from 'prettier'
 import { expect, test } from 'vitest'
 import * as plugin from '../source'
+import type { PluginConfig } from '../source/plugin'
 import type { PrettierOptions } from '../source/types'
+
+type Parser = PrettierOptions['parser']
 
 export async function runTest(
 	dirname: string,
-	parsers: string[],
-	options: Partial<PrettierOptions>,
+	parsers: Parser[],
+	options: Partial<PluginConfig>,
 ) {
 	let defaultOptions = { plugins: [plugin], tabWidth: 4 }
 	options = Object.assign(defaultOptions, options)
@@ -20,7 +23,7 @@ export async function runTest(
 	}
 
 	for (const filename of fs.readdirSync(dirname)) {
-		const path = dirname + '/' + filename
+		const path = resolve(dirname, filename)
 		if (
 			extname(filename) !== '.snap' &&
 			fs.lstatSync(path).isFile() &&

@@ -9,5 +9,8 @@
 		".env": "*.env, .env.*, .envrc, env.d.ts",
 		"package.json": ".npm*, .nvmrc, .pnpm*, pnpm*, package-lock.json, yarn*",
 		"readme*": "changelog*, code_of_conduct*, license*, readme*, security.md"
+	},
+	"markdownlint.config": {
+		"no-inline-html": false
 	}
 }

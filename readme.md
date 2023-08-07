@@ -17,24 +17,30 @@ This project is based on [@trivago/prettier-plugin-sort-imports](https://github.
 
 We welcome your [contributions](.github/contributing.md)!
 
-## Table of Contents <!-- omit in toc -->
-
-- [Sample](#sample)
-  - [Input](#input)
-  - [Output](#output)
-- [Install](#install)
-- [Usage](#usage)
-  - [How does import sort work?](#how-does-import-sort-work)
-  - [Options](#options)
-    - [`importOrder`](#importorder)
-    - [`importOrderTSVersion`](#importordertsversion)
-    - [`importOrderParsers`](#importorderparsers)
-  - [Prevent imports from being sorted](#prevent-imports-from-being-sorted)
-  - [Comments](#comments)
-- [FAQ / Troubleshooting](#faq--troubleshooting)
-- [Compatibility](#compatibility)
-- [Contribution](#contribution)
-- [Disclaimer](#disclaimer)
+<details>
+  <summary><h3>Table of contents</h3></summary>
+  <ul>
+    <li><a href="#sample">Sample</a>
+      <ul>
+        <li><a href="#input">Input</a></li>
+        <li><a href="#output">Output</a></li>
+      </ul>
+    </li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#how-does-import-sort-work">How does import sort work?</a></li>
+        <li><a href="#options">Options</a></li>
+        <li><a href="#prevent-imports-from-being-sorted">Prevent imports from being sorted</a></li>
+        <li><a href="#comments">Comments</a></li>
+      </ul>
+    </li>
+    <li><a href="#faq--troubleshooting">FAQ / Troubleshooting</a></li>
+    <li><a href="#compatibility">Compatibility</a></li>
+    <li><a href="#contribution">Contribution</a></li>
+    <li><a href="#disclaimer">Disclaimer</a></li>
+  </ul>
+</details>
 
 ## Sample
 
@@ -47,11 +53,11 @@ import { environment } from "./misguided-module-with-side-effects.js";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import React, {
-    FC,
-    useEffect,
-    useRef,
-    ChangeEvent,
-    KeyboardEvent,
+  FC,
+  useEffect,
+  useRef,
+  ChangeEvent,
+  KeyboardEvent,
 } from 'react';
 import { logger } from '@core/logger';
 import { reduce, debounce } from 'lodash';
@@ -74,11 +80,11 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import { debounce, reduce } from 'lodash';
 import React, {
-    ChangeEvent,
-    FC,
-    KeyboardEvent,
-    useEffect,
-    useRef,
+  ChangeEvent,
+  FC,
+  KeyboardEvent,
+  useEffect,
+  useRef,
 } from 'react';
 
 import { createConnection } from '@server/database';
@@ -185,9 +191,9 @@ The main way to control the import order and formatting, `importOrder` is a coll
 
 ```js
 [
-    '<BUILTIN_MODULES>', // Node.js built-in modules
-    '<THIRD_PARTY_MODULES>', // Imports not matched by other special words or groups.
-    '^[.]', // relative imports
+  '<BUILTIN_MODULES>', // Node.js built-in modules
+  '<THIRD_PARTY_MODULES>', // Imports not matched by other special words or groups.
+  '^[.]', // relative imports
 ],
 ```
 
@@ -276,9 +282,10 @@ If you define non-relative aliases to refer to local files without long chains o
 
 ```json
 "importOrder": [
-    "<THIRD_PARTY_MODULES>",
-    "^(@api|@assets|@ui)(/.*)$",
-    "^[.]"]
+  "<THIRD_PARTY_MODULES>",
+  "^(@api|@assets|@ui)(/.*)$",
+  "^[.]"
+]
 ```
 
 e.g.:
@@ -296,8 +303,8 @@ If you have pragma-comments at the top of file, or you have boilerplate copyrigh
 
 ```json
 "importOrder": [
-    "",
-    "^[.]"
+  "",
+  "^[.]"
 ]
 ```
 

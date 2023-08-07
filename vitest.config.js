@@ -1,8 +1,8 @@
-import { configDefaults, defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	test: {
-		exclude: [...configDefaults.exclude, 'lib/**'],
+		cache: false,
 		setupFiles: ['./tests/raw-serializer'],
 	},
 })

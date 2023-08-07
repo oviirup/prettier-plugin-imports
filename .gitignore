@@ -1,5 +1,8 @@
 # repository
-node_modules/
+node_modules
+.idea
+coverage
+build
 /plugin.js
 /plugin.d.ts
 *.tgz
@@ -8,6 +11,7 @@ node_modules/
 logs
 *.log
 *-debug.log*
+*-error.log*
 report.*.json
 
 
