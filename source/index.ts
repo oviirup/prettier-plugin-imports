@@ -1,4 +1,4 @@
-import type { RequiredOptions as PrettierRequiredOptions } from 'prettier'
+import type { RequiredOptions } from 'prettier'
 import { parsers as babelParsers } from 'prettier/parser-babel'
 import { parsers as flowParsers } from 'prettier/parser-flow'
 import { parsers as htmlParsers } from 'prettier/parser-html'
@@ -17,25 +17,22 @@ interface PrettierOptionSchema {
 	description: string
 }
 
+const defaultImportOrder = [
+	_BUILTIN_MODULES,
+	_THIRD_PARTY_MODULES, // Everything not matching relative imports
+	'^[.]', // relative imports
+]
+
 export const options: Record<
-	Exclude<keyof PrettierOptions, keyof PrettierRequiredOptions>,
+	Exclude<keyof PrettierOptions, keyof RequiredOptions>,
 	PrettierOptionSchema
 > = {
 	importOrder: {
 		type: 'path',
 		category: 'Global',
 		array: true,
-		default: [
-			{
-				value: [
-					_BUILTIN_MODULES,
-					_THIRD_PARTY_MODULES, // Everything not matching relative imports
-					'^[.]', // relative imports
-				],
-			},
-		],
-		description:
-			'Provide an order to sort imports. [node.js built-ins are always first]',
+		default: [{ value: defaultImportOrder }],
+		description: 'Provide an order to sort imports',
 	},
 	importOrderParsers: {
 		type: 'path',

@@ -1,12 +1,18 @@
 import fs from 'node:fs'
+import path from 'node:path'
 import { defineConfig } from 'tsup'
-
-// copy type definition
-fs.copyFileSync('./source/plugin.d.ts', './plugin.d.ts')
 
 // start build
 export default defineConfig({
-	entry: { plugin: './source/index.ts' },
+	entry: { plugin: path.resolve(__dirname, 'source/index.ts') },
 	format: ['cjs', 'esm'],
-	outDir: '.',
+	outDir: path.resolve(__dirname),
+	onSuccess: async () => {
+		// copy type definition
+		let source = path.resolve(__dirname, 'source/plugin.d.ts')
+		let target = path.resolve(__dirname, 'plugin.d.ts')
+		fs.copyFileSync(source, target)
+		console.log('\x1b[30mDTS plugin.d.ts')
+		console.log('\x1b[30mDTS    Copied Type definitions')
+	},
 })
