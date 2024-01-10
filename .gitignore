@@ -12,9 +12,3 @@ logs
 *-debug.log*
 *-error.log*
 report.*.json
-
-
-# package lock files
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
