@@ -1,4 +1,4 @@
 tests/*/
 **/*/*.test.*
-
+pnpm-lock.yaml
 readme.md

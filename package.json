@@ -1,63 +1,68 @@
 {
-	"name": "prettier-plugin-imports",
-	"version": "4.2.8",
-	"private": false,
-	"description": "A prettier plugins to sort imports in provided RegEx order",
-	"license": "MIT",
-	"repository": "github:graygalaxy/prettier-plugin-imports",
-	"author": "Avirup Ghosh (https://github.com/graygalaxy)",
-	"main": "plugin.js",
-	"module": "plugin.mjs",
-	"types": "plugin.d.ts",
-	"scripts": {
-		"prepare": "npm run build",
-		"build": "tsup --minify",
-		"build:watch": "tsup --watch",
-		"format": "prettier . --write",
-		"format:check": "prettier . --check",
-		"test": "vitest --run",
-		"test:type": "tsc --noEmit",
-		"test:watch": "vitest"
-	},
-	"files": [
-		"plugin.*"
-	],
-	"keywords": [
-		"prettier",
-		"plugin",
-		"sort",
-		"organize",
-		"import",
-		"typescript",
-		"javascript"
-	],
-	"dependencies": {
-		"@babel/core": "7.22.9",
-		"@babel/generator": "7.22.9",
-		"@babel/parser": "7.22.7",
-		"@babel/traverse": "7.22.8",
-		"@babel/types": "7.22.5",
-		"semver": "7.5.4"
-	},
-	"devDependencies": {
-		"@types/babel__generator": "^7.6.0",
-		"@types/babel__traverse": "^7.20.0",
-		"@types/node": "^18.0.0",
-		"@types/prettier": "^2.7.3",
-		"@types/semver": "^7.5.0",
-		"@vue/compiler-sfc": "^3.3.4",
-		"prettier": "^3.0.1",
-		"tsup": "^7.2.0",
-		"typescript": "^5.1.0",
-		"vitest": "^0.34.1"
-	},
-	"peerDependencies": {
-		"@vue/compiler-sfc": ">=3.0.0",
-		"prettier": "2 || 3"
-	},
-	"peerDependenciesMeta": {
-		"@vue/compiler-sfc": {
-			"optional": true
-		}
-	}
+  "name": "prettier-plugin-imports",
+  "version": "4.2.9",
+  "private": false,
+  "description": "A prettier plugins to sort imports in provided RegEx order",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oviirup/prettier-plugin-imports"
+  },
+  "author": {
+    "name": "Avirup Ghosh",
+    "url": "https://github.com/oviirup"
+  },
+  "main": "plugin.js",
+  "module": "plugin.mjs",
+  "types": "plugin.d.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsup --minify",
+    "build:watch": "tsup --watch",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "test": "vitest --run",
+    "test:type": "tsc --noEmit",
+    "test:watch": "vitest"
+  },
+  "files": [
+    "plugin.*"
+  ],
+  "keywords": [
+    "prettier",
+    "plugin",
+    "sort",
+    "organize",
+    "import",
+    "typescript",
+    "javascript"
+  ],
+  "dependencies": {
+    "@babel/core": "^7.23.7",
+    "@babel/generator": "^7.23.6",
+    "@babel/parser": "^7.23.6",
+    "@babel/traverse": "^7.23.7",
+    "@babel/types": "^7.23.6",
+    "semver": "^7.5.4"
+  },
+  "devDependencies": {
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__traverse": "^7.20.5",
+    "@types/node": "^20.10.8",
+    "@types/semver": "^7.5.6",
+    "@vue/compiler-sfc": "^3.4.7",
+    "prettier": "^3.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.3"
+  },
+  "peerDependencies": {
+    "@vue/compiler-sfc": ">=3",
+    "prettier": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "@vue/compiler-sfc": {
+      "optional": true
+    }
+  }
 }

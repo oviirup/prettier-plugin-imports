@@ -1,9 +1,8 @@
 # repository
 node_modules
-.idea
 coverage
 build
-/plugin.*
+dist
 *.tgz
 
 # log files
@@ -12,3 +11,8 @@ logs
 *-debug.log*
 *-error.log*
 report.*.json
+
+# package-lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
