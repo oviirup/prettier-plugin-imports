@@ -1,6 +1,6 @@
-import { runTest } from '../run-test'
+import { runTest } from '../run-test';
 
 runTest(__dirname, ['flow'], {
-	importOrder: ['^@core/(.*)$', '^@server/(.*)', '^@ui/(.*)$', '^[./]'],
-	importOrderParsers: ['flow'],
-})
+  importOrder: ['^@core/(.*)$', '^@server/(.*)', '^@ui/(.*)$', '^[./]'],
+  importOrderParserPlugins: ['flow'],
+});

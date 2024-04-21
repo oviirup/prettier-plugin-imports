@@ -2,11 +2,11 @@ import { runTest } from '../run-test';
 
 runTest(__dirname, ['typescript'], {
   importOrder: [
-    '^@core/(.*)$',
-    '^@server/(.*)$',
-    '^@ui/(.*)$',
+    '',
+    '<BUILTIN_MODULES>',
+    '',
     '<THIRD_PARTY_MODULES>',
-    '^[./]',
+    '',
+    '^[.]',
   ],
-  importOrderParserPlugins: ['typescript'],
 });
