@@ -1,4 +1,8 @@
-import { _TYPES_MODULES, chunkTypeUnsortable, newLineNode } from '../constants';
+import {
+  chunkTypeUnsortable,
+  newLineNode,
+  TYPES_SPECIAL_WORD,
+} from '../constants';
 import { adjustCommentsOnSortedNodes } from './adjust-comments-on-sorted-nodes';
 import { explodeTypeAndValueSpecifiers } from './explode-type-and-value-specifiers';
 import { getChunkTypeOfNode } from './get-chunk-type-of-node';
@@ -24,9 +28,9 @@ import type { GetSortedNodes, ImportChunk, ImportOrLine } from '../types';
 export const getSortedNodes: GetSortedNodes = (nodes, options) => {
   const {
     importOrder,
-    combineTypesAndImports,
-    hasSeparator,
-    leadingSeparator,
+    importOrderCombineTypeAndValueImports,
+    hasAnyCustomGroupSeparatorsInImportOrder,
+    provideGapAfterTopOfFileComments,
   } = options;
 
   // Split nodes at each boundary between a side-effect node and a
@@ -49,7 +53,7 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
     // do not sort side effect nodes
     if (chunk.type === chunkTypeUnsortable) {
       // If users use custom separators, add newlines around the side effect node
-      if (hasSeparator) {
+      if (hasAnyCustomGroupSeparatorsInImportOrder) {
         // Add newline before chunk if it has no leading comment #ConditionalNewLineAfterSideEffectWithSeparatorsGivenLeadingComment
         if (!chunk.nodes[0].leadingComments?.length) {
           finalNodes.push(newLineNode);
@@ -60,10 +64,10 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
       }
     } else {
       let nodes = mergeNodesWithMatchingImportFlavors(chunk.nodes, {
-        combineTypesAndImports,
+        importOrderCombineTypeAndValueImports,
       });
       // If type ordering is specified explicitly, we need to break apart type and value specifiers
-      if (importOrder.some((group) => group.includes(_TYPES_MODULES))) {
+      if (importOrder.some((group) => group.includes(TYPES_SPECIAL_WORD))) {
         nodes = explodeTypeAndValueSpecifiers(nodes);
       }
       // sort non-side effect nodes
@@ -78,6 +82,6 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
 
   // Adjust the comments on the sorted nodes to match the original comments
   return adjustCommentsOnSortedNodes(nodes, finalNodes, {
-    leadingSeparator,
+    leadingSeparator: provideGapAfterTopOfFileComments,
   });
 };

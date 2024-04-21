@@ -5,20 +5,23 @@ export type ImportOrderParserPlugin =
   | Extract<ParserPlugin, string>
   | `[${string},${string}]`;
 
-// prettier-ignore
 export interface PluginConfig {
   /**
    * A collection of Regular expressions in string format.
    *
    * ```json
-   * "importOrder":["^@core/(.*)$","^@server/(.*)$","^@ui/(.*)$","^[./]"],;
+   * "importOrder":["^@core/(.*)$","^@server/(.*)$","^@ui/(.*)$","^[.]"],;
    * ```
    *
-   * _Default:_ `[]`
+   * _Default:_ `["<BUILTIN_MODULES>"", "<THIRD_PARTY_MODULES>", "^[.]"]`
    *
-   * By default, this plugin will not move any imports. To separate third party
-   * from relative imports, use `["^[./]"]`. This will become the default in the
-   * next major version.
+   * By default, this plugin will sort node.js built-in modules to the top,
+   * followed by non-relative imports (usually third-party modules), and finally
+   * relative imports.
+   *
+   * `<THIRD_PARTY_MODULES>` is a special value that will match any imports not
+   * matched by any other regex patterns. We'll call them "third party imports"
+   * for simplicity, since that's what they usually are.
    *
    * The plugin moves the third party imports to the top which are not part of
    * the `importOrder` list. To move the third party imports at desired place,
@@ -26,7 +29,7 @@ export interface PluginConfig {
    * appropriate position:
    *
    * ```json
-   * "importOrder":["^@core/(.*)$","<THIRD_PARTY_MODULES>","^@server/(.*)$","^@ui/(.*)$","^[./]"],;
+   * "importOrder":["^@core/(.*)$","<third_party_modules>","^@server/(.*)$","^@ui/(.*)$","^[./]"],;
    * ```
    *
    * If you would like to order type imports differently from value imports, you
@@ -35,12 +38,36 @@ export interface PluginConfig {
    * and lastly local value imports:
    *
    * ```json
-   * "importOrder":["<TYPES>","<TYPES>^[./]","<THIRD_PARTY_MODULES>","^[./]"],;
+   * "importOrder":["<TYPES>","<types>^[./]","<third_party_modules>","^[./]"],;
    * ```
    */
   importOrder?: string[];
 
-  importOrderTSVersion?: string;
+  importOrderTypeScriptVersion?: string;
+
+  /**
+   * A boolean value to enable case-sensitivity in the sorting algorithm used to
+   * order imports within each match group.
+   *
+   * For example, when false (or not specified):
+   *
+   * ```js
+   * import ExampleComponent from './ExampleComponent';
+   * import ExamplesList from './ExamplesList';
+   * import ExampleWidget from './ExampleWidget';
+   * ```
+   *
+   * Compared with `"importOrderCaseSensitive": true`:
+   *
+   * ```js
+   * import ExampleComponent from './ExampleComponent';
+   * import ExamplesList from './ExamplesList';
+   * import ExampleWidget from './ExampleWidget';
+   * ```
+   *
+   * @default false
+   */
+  importOrderCaseSensitive?: boolean;
 
   /**
    * A collection of plugins for babel parser. The plugin passes this list to
@@ -51,19 +78,23 @@ export interface PluginConfig {
    *
    * **To pass the plugins to babel parser**:
    *
-   *     "importOrderParsers" : ["classProperties", "decorators-legacy"]
+   *     "importOrderParserPlugins" : ["classProperties", "decorators-legacy"]
    *
    * **To pass the options to the babel parser plugins**: Since prettier options
    * are limited to string, you can pass plugins with options as a JSON string
    * of the plugin array: `"[\"plugin-name\", { \"pluginOption\": true }]"`.
    *
-   *     "importOrderParsers" : ["classProperties", "[\"decorators\", { \"decoratorsBeforeExport\": true }]"]
+   *     "importOrderParserPlugins" : ["classProperties", "[\"decorators\", { \"decoratorsBeforeExport\": true }]"]
    *
    * **To disable default plugins for babel parser, pass an empty array**:
    *
    * @default ['typescript', 'jsx']
    */
-  importOrderParsers?: ImportOrderParserPlugin[];
+  importOrderParserPlugins?: ImportOrderParserPlugin[];
 }
 
 export type PrettierConfig = PluginConfig & Config;
+
+declare module 'prettier' {
+  interface Options extends PluginConfig {}
+}

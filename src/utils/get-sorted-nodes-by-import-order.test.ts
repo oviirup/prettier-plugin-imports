@@ -28,7 +28,7 @@ import Xa from 'Xa';
 test('it returns all sorted nodes', () => {
   const result = getImportNodes(code);
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder(['^[./]']),
+    importOrder: testingOnly.normalizeImportOrderOption(['^[./]']),
   }) as ImportDeclaration[];
 
   expect(getSortedNodesNamesAndNewlines(sorted)).toEqual([
@@ -76,7 +76,7 @@ test('it returns all sorted nodes', () => {
 test('it returns all sorted nodes with sort order', () => {
   const result = getImportNodes(code);
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder([
+    importOrder: testingOnly.normalizeImportOrderOption([
       '^a$',
       '^t$',
       '^k$',
@@ -137,7 +137,7 @@ import {type B, A} from 'z';
     plugins: ['typescript'],
   });
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder(['^[./]']),
+    importOrder: testingOnly.normalizeImportOrderOption(['^[./]']),
   }) as ImportDeclaration[];
   expect(getSortedNodesNamesAndNewlines(sorted)).toEqual(['k', 't', 'z']);
   expect(
@@ -156,7 +156,7 @@ import {type B, A} from 'z';
 test('it returns all sorted nodes with builtin specifiers at the top', () => {
   const result = getImportNodes(code);
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder(['^[./]']),
+    importOrder: testingOnly.normalizeImportOrderOption(['^[./]']),
   }) as ImportDeclaration[];
 
   expect(getSortedNodesNamesAndNewlines(sorted)).toEqual([
@@ -181,7 +181,7 @@ test('it returns all sorted nodes with builtin specifiers at the top', () => {
 test('it returns all sorted nodes with custom third party modules and builtins at top', () => {
   const result = getImportNodes(code);
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder([
+    importOrder: testingOnly.normalizeImportOrderOption([
       '^a$',
       '<THIRD_PARTY_MODULES>',
       '^t$',
@@ -211,7 +211,7 @@ test('it returns all sorted nodes with custom third party modules and builtins a
 test('it returns all sorted nodes with custom separation', () => {
   const result = getImportNodes(code);
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder([
+    importOrder: testingOnly.normalizeImportOrderOption([
       '^a$',
       '<THIRD_PARTY_MODULES>',
       '^t$',
@@ -243,7 +243,7 @@ test('it returns all sorted nodes with custom separation', () => {
 test('it does not add multiple custom import separators', () => {
   const result = getImportNodes(code);
   const sorted = getSortedNodesByImportOrder(result, {
-    importOrder: testingOnly.normalizeImportOrder([
+    importOrder: testingOnly.normalizeImportOrderOption([
       '^a$',
       '<THIRD_PARTY_MODULES>',
       '^t$',
@@ -270,6 +270,31 @@ test('it does not add multiple custom import separators', () => {
     't',
     '',
     'k',
+    './local',
+  ]);
+});
+
+test('it should sort nodes case-sensitively', () => {
+  const result = getImportNodes(code);
+  const sorted = getSortedNodesByImportOrder(result, {
+    importOrder: testingOnly.normalizeImportOrderOption(['^[./]']),
+    importOrderCaseSensitive: true,
+  }) as ImportDeclaration[];
+  expect(getSortedNodesNamesAndNewlines(sorted)).toEqual([
+    'node:fs/promises',
+    'node:url',
+    'path',
+    'BY',
+    'Ba',
+    'XY',
+    'Xa',
+    'a',
+    'c',
+    'g',
+    'k',
+    't',
+    'x',
+    'z',
     './local',
   ]);
 });

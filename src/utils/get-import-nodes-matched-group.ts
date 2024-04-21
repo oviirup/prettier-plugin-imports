@@ -1,4 +1,7 @@
-import { _THIRD_PARTY_MODULES, _TYPES_MODULES } from '../constants';
+import {
+  THIRD_PARTY_MODULES_SPECIAL_WORD,
+  TYPES_SPECIAL_WORD,
+} from '../constants';
 import type { ImportDeclaration } from '@babel/types';
 
 const regexCache = new Map<string, RegExp>();
@@ -7,7 +10,7 @@ const cachedRegExp = (regExp: string) => {
     return regexCache.get(regExp)!;
   }
   // Strip <TYPES> when creating regexp
-  const result = new RegExp(regExp.replace(_TYPES_MODULES, ''));
+  const result = new RegExp(regExp.replace(TYPES_SPECIAL_WORD, ''));
   regexCache.set(regExp, result);
   return result;
 };
@@ -26,7 +29,7 @@ export const getImportNodesMatchedGroup = (
   importOrder: string[],
 ) => {
   const includesTypesSpecialWord = importOrder.some((group) =>
-    group.includes(_TYPES_MODULES),
+    group.includes(TYPES_SPECIAL_WORD),
   );
   const groupWithRegExp = importOrder
     .map((group) => ({
@@ -34,13 +37,13 @@ export const getImportNodesMatchedGroup = (
       regExp: cachedRegExp(group),
     }))
     // Remove explicit bare <TYPES> group, we'll deal with that at the end similar to third party modules
-    .filter(({ group }) => group !== _TYPES_MODULES);
+    .filter(({ group }) => group !== TYPES_SPECIAL_WORD);
 
   for (const { group, regExp } of groupWithRegExp) {
     let matched = false;
     // Type imports need to be checked separately
     // Note: this does not include import specifiers, just declarations.
-    if (group.includes(_TYPES_MODULES)) {
+    if (group.includes(TYPES_SPECIAL_WORD)) {
       // Since we stripped <TYPES> above, this will have a regexp too, e.g. local types
       matched =
         node.importKind === 'type' && node.source.value.match(regExp) !== null;
@@ -55,6 +58,6 @@ export const getImportNodesMatchedGroup = (
   }
 
   return node.importKind === 'type' && includesTypesSpecialWord
-    ? _TYPES_MODULES
-    : _THIRD_PARTY_MODULES;
+    ? TYPES_SPECIAL_WORD
+    : THIRD_PARTY_MODULES_SPECIAL_WORD;
 };

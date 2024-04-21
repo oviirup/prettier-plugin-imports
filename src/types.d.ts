@@ -1,4 +1,11 @@
-import '@babel/types';
+import {
+  type EmptyStatement,
+  type ExpressionStatement,
+  type ImportDeclaration,
+  type ImportDefaultSpecifier,
+  type ImportNamespaceSpecifier,
+  type ImportSpecifier,
+} from '@babel/types';
 import { RequiredOptions } from 'prettier';
 import {
   chunkTypeOther,
@@ -10,14 +17,6 @@ import {
 } from './constants';
 import { PluginConfig } from './plugin';
 import type { ParserPlugin } from '@babel/parser';
-import type {
-  EmptyStatement,
-  ExpressionStatement,
-  ImportDeclaration,
-  ImportDefaultSpecifier,
-  ImportNamespaceSpecifier,
-  ImportSpecifier,
-} from '@babel/types';
 
 export interface PrettierOptions
   extends Required<PluginConfig>,
@@ -26,7 +25,10 @@ export interface PrettierOptions
 /** Subset of options that need to be normalized, or affect normalization */
 export type NormalizableOptions = Pick<
   PrettierOptions,
-  'importOrder' | 'importOrderParsers' | 'importOrderTSVersion'
+  | 'importOrder'
+  | 'importOrderParserPlugins'
+  | 'importOrderTypeScriptVersion'
+  | 'importOrderCaseSensitive'
 > &
   // filepath can be undefined when running prettier via the api on text input
   Pick<Partial<PrettierOptions>, 'filepath'>;
@@ -63,24 +65,27 @@ export type ImportRelated = ImportOrLine | SomeSpecifier;
  */
 export interface ExtendedOptions {
   importOrder: PrettierOptions['importOrder'];
-  combineTypesAndImports: boolean;
-  hasSeparator: boolean;
-  leadingSeparator: boolean;
+  importOrderCombineTypeAndValueImports: boolean;
+  importOrderCaseSensitive: boolean;
+  hasAnyCustomGroupSeparatorsInImportOrder: boolean;
+  provideGapAfterTopOfFileComments: boolean;
   plugins: ParserPlugin[];
 }
 
 export type GetSortedNodes = (
   nodes: ImportDeclaration[],
   options: Pick<ExtendedOptions, 'importOrder'> & {
-    combineTypesAndImports: boolean;
-    hasSeparator?: boolean;
-    leadingSeparator?: boolean;
+    importOrderCombineTypeAndValueImports: boolean;
+    hasAnyCustomGroupSeparatorsInImportOrder?: boolean;
+    provideGapAfterTopOfFileComments?: boolean;
   },
 ) => ImportOrLine[];
 
 export type GetSortedNodesByImportOrder = (
   nodes: ImportDeclaration[],
-  options: Pick<ExtendedOptions, 'importOrder'>,
+  options: Pick<ExtendedOptions, 'importOrder'> & {
+    importOrderCaseSensitive?: boolean;
+  },
 ) => ImportOrLine[];
 
 export type GetChunkTypeOfNode = (node: ImportDeclaration) => ChunkType;
@@ -89,7 +94,7 @@ export type GetImportFlavorOfNode = (node: ImportDeclaration) => FlavorType;
 
 export type MergeNodesWithMatchingImportFlavors = (
   nodes: ImportDeclaration[],
-  options: { combineTypesAndImports: boolean },
+  options: { importOrderCombineTypeAndValueImports: boolean },
 ) => ImportDeclaration[];
 
 export type ExplodeTypeAndValueSpecifiers = (

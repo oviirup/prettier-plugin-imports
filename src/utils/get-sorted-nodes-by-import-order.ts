@@ -1,8 +1,11 @@
-import { _THIRD_PARTY_MODULES, newLineNode } from '../constants';
+import { newLineNode, THIRD_PARTY_MODULES_SPECIAL_WORD } from '../constants';
 import { getImportNodesMatchedGroup } from './get-import-nodes-matched-group';
 import { getSortedImportSpecifiers } from './get-sorted-import-specifiers';
 import { getSortedNodesGroup } from './get-sorted-nodes-group';
-import { isSeparator, testingOnly } from './normalize-plugin-options';
+import {
+  isCustomGroupSeparator,
+  testingOnly,
+} from './normalize-plugin-options';
 import type {
   GetSortedNodesByImportOrder,
   ImportGroups,
@@ -19,12 +22,12 @@ import type {
  */
 export const getSortedNodesByImportOrder: GetSortedNodesByImportOrder = (
   originalNodes,
-  { importOrder },
+  { importOrder, importOrderCaseSensitive },
 ) => {
   if (
     process.env.NODE_ENV === 'test' &&
     JSON.stringify(importOrder) !==
-      JSON.stringify(testingOnly.normalizeImportOrder(importOrder))
+      JSON.stringify(testingOnly.normalizeImportOrderOption(importOrder))
   ) {
     throw new Error(
       'API Misuse: getSortedNodesByImportOrder::importOrder option already should be normalized.',
@@ -36,7 +39,7 @@ export const getSortedNodesByImportOrder: GetSortedNodesByImportOrder = (
   const importOrderGroups = importOrder.reduce<ImportGroups>(
     (groups, regexp) =>
       // Don't create a new group for explicit import separators
-      isSeparator(regexp)
+      isCustomGroupSeparator(regexp)
         ? groups
         : {
             ...groups,
@@ -47,18 +50,30 @@ export const getSortedNodesByImportOrder: GetSortedNodesByImportOrder = (
 
   // Select just the SPECIAL WORDS and the matchers
   const sanitizedImportOrder = importOrder.filter(
-    (group) => !isSeparator(group) && group !== _THIRD_PARTY_MODULES,
+    (group) =>
+      !isCustomGroupSeparator(group) &&
+      group !== THIRD_PARTY_MODULES_SPECIAL_WORD,
   );
 
   // Assign import nodes into import order groups
   for (const node of originalNodes) {
-    const matchedGroup = getImportNodesMatchedGroup(node, sanitizedImportOrder);
-    importOrderGroups[matchedGroup].push(node);
+    const matchedGroupName = getImportNodesMatchedGroup(
+      node,
+      sanitizedImportOrder,
+    );
+    const matchedGroup = importOrderGroups[matchedGroupName];
+    if (matchedGroup) {
+      matchedGroup.push(node);
+    } else {
+      throw new Error(
+        `Could not find a matching group in importOrder for: "${node.source.value}" on line ${node.source.loc?.start.line}.${node.importKind === 'type' ? ' Did you forget to include "<TYPES>"?' : ''}`,
+      );
+    }
   }
 
   for (const group of importOrder) {
     // If it's a custom separator, all we need to do is add a newline
-    if (isSeparator(group)) {
+    if (isCustomGroupSeparator(group)) {
       const lastNode = finalNodes[finalNodes.length - 1];
       // Avoid empty new line if first group is empty
       if (!lastNode) {
@@ -76,10 +91,14 @@ export const getSortedNodesByImportOrder: GetSortedNodesByImportOrder = (
 
     if (groupNodes.length === 0) continue;
 
-    const sortedInsideGroup = getSortedNodesGroup(groupNodes);
+    const sortedInsideGroup = getSortedNodesGroup(groupNodes, {
+      importOrderCaseSensitive,
+    });
 
     // Sort the import specifiers
-    sortedInsideGroup.forEach((node) => getSortedImportSpecifiers(node));
+    sortedInsideGroup.forEach((node) =>
+      getSortedImportSpecifiers(node, { importOrderCaseSensitive }),
+    );
 
     finalNodes.push(...sortedInsideGroup);
   }

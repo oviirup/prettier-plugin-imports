@@ -12,9 +12,8 @@ export const chunkTypeUnsortable = 'unsortable';
 export const chunkTypeOther = 'other';
 
 /**
- * Value imports (including top-level default imports)\
- * `- import {Thing} from ...` or\
- * `import Thing from ...`
+ * Value imports (including top-level default imports) - import {Thing} from ...
+ * or import Thing from ...
  */
 export const importFlavorValue = 'value';
 /** Import type {} from ... */
@@ -26,32 +25,45 @@ export const mergeableImportFlavors = [
   importFlavorType,
 ] as const;
 
-export const _BUILTIN_MODULES_RGX = `^(?:node:)?(?:${builtinModules.join(
+// NOTE: 'test' is not included in `builtinModules` so explicitly check for "node:test"
+// REF: https://github.com/nodejs/node/issues/42785
+export const BUILTIN_MODULES_REGEX_STR = `(^(?:node:)?(?:${builtinModules.join(
   '|',
-)})$`;
+)})$)|(^node:test$)`;
 
-export const _BUILTIN_MODULES = '<BUILTIN_MODULES>';
-export const _THIRD_PARTY_MODULES = '<THIRD_PARTY_MODULES>';
-export const _TYPES_MODULES = '<TYPES>';
+export const BUILTIN_MODULES_SPECIAL_WORD = '<BUILTIN_MODULES>';
+/** Used to mark not otherwise matched imports should be placed */
+export const THIRD_PARTY_MODULES_SPECIAL_WORD = '<THIRD_PARTY_MODULES>';
+export const TYPES_SPECIAL_WORD = '<TYPES>';
 
-const _NEW_LINE = 'PRETTIER_PLUGIN_IMPORTS_NEW_LINE';
+const PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE =
+  'PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE';
 
 /**
  * Use this to force a newline at top-level scope (good for newlines generated
  * between import blocks)
  */
-export const newLineNode = expressionStatement(stringLiteral(_NEW_LINE));
+export const newLineNode = expressionStatement(
+  stringLiteral(PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE),
+);
 /**
  * Use this if you want to force a newline, but you're attaching to
  * leading/inner/trailing Comments
  */
 export const forceANewlineUsingACommentStatement = () => ({
   type: 'CommentLine' as const,
-  value: 'PRETTIER_PLUGIN_IMPORTS_NEWLINE_COMMENT',
+  value: 'PRETTIER_PLUGIN_SORT_IMPORTS_NEWLINE_COMMENT',
   start: -1,
   end: -1,
   loc: { start: { line: -1, column: -1 }, end: { line: -1, column: -1 } },
 });
 
 export const injectNewlinesRegex =
-  /("PRETTIER_PLUGIN_IMPORTS_NEW_LINE";|\/\/PRETTIER_PLUGIN_IMPORTS_NEWLINE_COMMENT)/gi;
+  /("PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE";|\/\/PRETTIER_PLUGIN_SORT_IMPORTS_NEWLINE_COMMENT)/gi;
+
+// This default is set by prettier itself by including it in our config in index.ts
+export const DEFAULT_IMPORT_ORDER = [
+  BUILTIN_MODULES_SPECIAL_WORD,
+  THIRD_PARTY_MODULES_SPECIAL_WORD, // Everything not matching relative imports
+  '^[.]', // relative imports
+];

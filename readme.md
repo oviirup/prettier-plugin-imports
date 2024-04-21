@@ -1,8 +1,7 @@
-# Prettier Plugin Imports 
+# Prettier Plugin Imports
 
 [![version](https://img.shields.io/npm/v/prettier-plugin-imports)](https://www.npmjs.com/package/prettier-plugin-imports)
 ![CI status](https://img.shields.io/github/actions/workflow/status/oviirup/prettier-plugin-imports/ci.yml?label=CI)
-
 
 A prettier plugin to sort import declarations by provided Regular Expression order, while preserving side-effect import order.
 
@@ -51,35 +50,14 @@ We welcome your [contributions](.github/contributing.md)!
 ```javascript
 // prettier-ignore
 import { environment } from "./misguided-module-with-side-effects.js";
-
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import React, {
-  FC,
-  useEffect,
-  useRef,
-  ChangeEvent,
-  KeyboardEvent,
-} from 'react';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+import { initializeApp } from '@core/app';
 import { logger } from '@core/logger';
-import { reduce, debounce } from 'lodash';
-import { Message } from '../Message';
+import { createConnection } from '@server/database';
 import { createServer } from '@server/node';
 import { Alert } from '@ui/Alert';
-import { repeat, filter, add } from '../utils';
-import { initializeApp } from '@core/app';
 import { Popup } from '@ui/Popup';
-import { createConnection } from '@server/database';
-```
-
-### Output
-
-```javascript
-// prettier-ignore
-import { environment } from "./misguided-module-with-side-effects.js";
-
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import { debounce, reduce } from 'lodash';
 import React, {
   ChangeEvent,
@@ -88,16 +66,31 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
+import { Message } from '../Message';
+import { add, filter, repeat } from '../utils';
+```
 
-import { createConnection } from '@server/database';
-import { createServer } from '@server/node';
+### Output
 
+```javascript
+// prettier-ignore
+import { environment } from "./misguided-module-with-side-effects.js";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import { initializeApp } from '@core/app';
 import { logger } from '@core/logger';
-
+import { createConnection } from '@server/database';
+import { createServer } from '@server/node';
 import { Alert } from '@ui/Alert';
 import { Popup } from '@ui/Popup';
-
+import { debounce, reduce } from 'lodash';
+import React, {
+  ChangeEvent,
+  FC,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+} from 'react';
 import { Message } from '../Message';
 import { add, filter, repeat } from '../utils';
 ```
@@ -117,7 +110,7 @@ Add your preferred settings in your prettier config file.
 ```ts
 // @ts-check
 
-/** @type {import("prettier-plugin-imports").PrettierConfig} */
+/** @type {import('prettier-plugin-imports').PrettierConfig} */
 module.exports = {
   printWidth: 80,
   tabWidth: 4,
@@ -151,12 +144,12 @@ classified as unsortable. They also behave as a barrier that other imports may n
 example, let's say you've got these imports:
 
 ```javascript
+import D from 'd';
 import E from 'e';
 import F from 'f';
-import D from 'd';
 import 'c';
-import B from 'b';
 import A from 'a';
+import B from 'b';
 ```
 
 Then the first three imports are sorted and the last two imports are sorted, but all imports above `c` stay above `c`
@@ -220,8 +213,8 @@ Some styles call for putting the import of `react` at the top of your imports, w
 e.g.:
 
 ```ts
-import * as React from 'react';
 import cn from 'classnames';
+import * as React from 'react';
 import MyApp from './MyApp';
 ```
 
@@ -237,8 +230,8 @@ e.g.:
 
 ```ts
 import * as React from 'react';
-import MyApp from './MyApp';
 import styles from './global.css';
+import MyApp from './MyApp';
 ```
 
 ##### 3. Add spaces between import groups
@@ -253,9 +246,7 @@ e.g.:
 
 ```ts
 import fs from 'fs';
-
 import { debounce, reduce } from 'lodash';
-
 import MyApp from './MyApp';
 ```
 
@@ -270,12 +261,12 @@ If you're using Flow or TypeScript, you might want to separate out your type imp
 e.g.:
 
 ```ts
-import type { Logger } from '@tanstack/react-query';
-import type { Location } from 'history';
-import type {Props} from './App';
-import { QueryClient} from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { createBrowserHistory } from 'history';
 import App from './App';
+import type { Props } from './App';
+import type { Logger } from '@tanstack/react-query';
+import type { Location } from 'history';
 ```
 
 ##### 5. Group aliases with local imports
@@ -293,9 +284,9 @@ If you define non-relative aliases to refer to local files without long chains o
 e.g.:
 
 ```ts
-import { debounce, reduce } from 'lodash';
 import { Users } from '@api';
 import icon from '@assets/icon';
+import { debounce, reduce } from 'lodash';
 import App from './App';
 ```
 
@@ -313,9 +304,7 @@ If you have pragma-comments at the top of file, or you have boilerplate copyrigh
 e.g.:
 
 ```ts
-/**
- * @prettier
- */
+/** @prettier */
 
 import { promises } from 'fs';
 import { Users } from '@api';
@@ -372,7 +361,7 @@ prevent an import from getting sorted like this:
 ```javascript
 // prettier-ignore
 import { goods } from "zealand";
-import { cars } from "austria";
+import { cars } from 'austria';
 ```
 
 This will keep the `zealand` import at the top instead of moving it below the `austria` import. Note that since only
@@ -394,8 +383,8 @@ Having some trouble or an issue? You can check [FAQ / Troubleshooting section](.
 
 ## Compatibility
 
-| Framework              | Supported    | Note                                                       |
-| ---------------------- | ------------ | ---------------------------------------------------------- |
+| Framework              | Supported     | Note                                                       |
+| ---------------------- | ------------- | ---------------------------------------------------------- |
 | JS with ES Modules     | ✅ Everything | -                                                          |
 | NodeJS with ES Modules | ✅ Everything | -                                                          |
 | React                  | ✅ Everything | -                                                          |

@@ -95,8 +95,9 @@ function mergeRanges(ranges: Range[]): Range[] {
  *
  * More formally, let `r_1`, `r_2`, ..., `r_n` denote the sets represented by
  * the given ranges; and let `r` be the set `[0, totalLength)`. Then this
- * function returns a list of ranges representing the set> R \ r_1 \ r_2 \ ...\
- * R_n
+ * function returns a list of ranges representing the set
+ *
+ * > R \ r_1 \ r_2 \ ... \ r_n
  *
  * (where `\` is the set negation operator)
  *

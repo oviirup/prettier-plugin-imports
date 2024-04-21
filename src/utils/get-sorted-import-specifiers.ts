@@ -1,5 +1,6 @@
 import { type ImportDeclaration } from '@babel/types';
-import { naturalSort } from './natural-sort';
+import { naturalSort, naturalSortCaseSensitive } from './natural-sort';
+import type { PluginConfig } from '../plugin';
 
 /**
  * This function returns import nodes with alphabetically sorted module
@@ -11,7 +12,11 @@ import { naturalSort } from './natural-sort';
  *
  * @param node Import declaration node
  */
-export const getSortedImportSpecifiers = (node: ImportDeclaration) => {
+export const getSortedImportSpecifiers = (
+  node: ImportDeclaration,
+  options?: Pick<PluginConfig, 'importOrderCaseSensitive'>,
+) => {
+  const { importOrderCaseSensitive } = options || {};
   node.specifiers.sort((a, b) => {
     if (a.type !== b.type) {
       return a.type === 'ImportDefaultSpecifier' ? -1 : 1;
@@ -24,8 +29,10 @@ export const getSortedImportSpecifiers = (node: ImportDeclaration) => {
       // flow uses null for value import specifiers
       return a.importKind === 'value' || a.importKind == null ? -1 : 1;
     }
-
-    return naturalSort(a.local.name, b.local.name);
+    const sortFn = importOrderCaseSensitive
+      ? naturalSortCaseSensitive
+      : naturalSort;
+    return sortFn(a.local.name, b.local.name);
   });
   return node;
 };

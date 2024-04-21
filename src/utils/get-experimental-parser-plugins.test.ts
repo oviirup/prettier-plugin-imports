@@ -35,5 +35,5 @@ test('it should throw an Error for invalid JSON', () => {
       'flow',
       '["decorators", { decoratorsBeforeExport: true }]',
     ]),
-  ).toThrowError('Invalid JSON in importOrderParsers: ');
+  ).toThrowError('Invalid JSON in importOrderParserPlugins: ');
 });

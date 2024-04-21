@@ -5,12 +5,10 @@ root = true
 
 # Unix-style newlines with a newline ending every file
 [*]
-charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+# Set default charset (override if necessary)
+charset = utf-8
 indent_style = space
-indent_size = 2
-
-[*.md]
-trim_trailing_whitespace = false
+indent_size = 4

@@ -16,7 +16,20 @@ export function preprocessor(code: string, options: PrettierOptions): string {
     plugins,
   };
 
-  const ast = babelParser(code, parserOptions);
+  // Astro component scripts allow returning a response
+  if (options.parentParser === 'astro') {
+    parserOptions.allowReturnOutsideFunction = true;
+  }
+
+  let ast: ReturnType<typeof babelParser>;
+  try {
+    ast = babelParser(code, parserOptions);
+  } catch (_) {
+    console.error(
+      ' [error] [prettier-plugin-sort-imports]: import sorting aborted due to babel parsing error.',
+    );
+    return code;
+  }
 
   const directives = ast.program.directives;
   const interpreter = ast.program.interpreter;
@@ -24,8 +37,8 @@ export function preprocessor(code: string, options: PrettierOptions): string {
   const allOriginalImportNodes: ImportDeclaration[] = [];
   traverse(ast, {
     ImportDeclaration(path: NodePath<ImportDeclaration>) {
-      const tsModuleParent = path.findParent((path) =>
-        isTSModuleDeclaration(path.node),
+      const tsModuleParent = path.findParent((p) =>
+        isTSModuleDeclaration(p.node),
       );
       if (!tsModuleParent) {
         allOriginalImportNodes.push(path.node);
@@ -35,6 +48,11 @@ export function preprocessor(code: string, options: PrettierOptions): string {
 
   // short-circuit if there are no import declarations
   if (allOriginalImportNodes.length === 0) {
+    return code;
+  }
+
+  // short-circuit if importOrder is an empty array (can be used to disable plugin)
+  if (!remainingOptions.importOrder.length) {
     return code;
   }
 

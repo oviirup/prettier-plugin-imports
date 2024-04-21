@@ -226,13 +226,13 @@ function mutateContextAndMerge({
  * or vice versa
  */
 export const mergeNodesWithMatchingImportFlavors: MergeNodesWithMatchingImportFlavors =
-  (input, { combineTypesAndImports }) => {
+  (input, { importOrderCombineTypeAndValueImports }) => {
     const nodesToDelete: ImportDeclaration[] = [];
 
     let context: Record<string, ImportDeclaration> = {};
     const groups = selectMergeableNodesByImportFlavor(input);
     for (const groupKey of mergeableImportFlavors) {
-      if (!combineTypesAndImports) {
+      if (!importOrderCombineTypeAndValueImports) {
         // Reset in loop to avoid unintended merge across variants
         context = {};
       }

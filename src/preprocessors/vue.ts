@@ -2,12 +2,16 @@ import { ImportOrderParserPlugin } from '../plugin';
 import { PrettierOptions } from '../types';
 import { hasPlugin } from '../utils/get-experimental-parser-plugins';
 import { preprocessor } from './preprocessor';
-import type { parse as Parse } from '@vue/compiler-sfc';
+import type { SFCDescriptor } from '@vue/compiler-sfc';
 
 export function vuePreprocessor(code: string, options: PrettierOptions) {
   try {
-    const { parse }: { parse: typeof Parse } = require('@vue/compiler-sfc');
-    const { descriptor } = parse(code);
+    const { parse } = require('@vue/compiler-sfc');
+    const version = require('@vue/compiler-sfc/package.json').version?.split(
+      '.',
+    )[0];
+    const descriptor: SFCDescriptor =
+      version === '2' ? parse({ source: code }) : parse(code).descriptor;
 
     // 1. Filter valid blocks.
     const blocks = [descriptor.script, descriptor.scriptSetup].filter(
@@ -30,10 +34,16 @@ export function vuePreprocessor(code: string, options: PrettierOptions) {
       // https://github.com/vuejs/core/blob/b8fc18c0b23be9a77b05dc41ed452a87a0becf82/packages/compiler-core/src/ast.ts#L74-L80
       // The node's range. The `start` is inclusive and `end` is exclusive.
       // [start, end)
-      const { start, end } = block.loc;
+
+      // @ts-expect-error Some vue versions have a `block.loc`, others have start and end directly on the block
+      let { start, end } = block;
+      if ('loc' in block) {
+        start = block.loc.start.offset;
+        end = block.loc.end.offset;
+      }
       const preprocessedBlockCode = sortScript(block, options);
-      result += code.slice(offset, start.offset) + preprocessedBlockCode;
-      offset = end.offset;
+      result += code.slice(offset, start) + preprocessedBlockCode;
+      offset = end;
     }
 
     // 4. Append the rest.
@@ -42,10 +52,10 @@ export function vuePreprocessor(code: string, options: PrettierOptions) {
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
       console.warn(
-        '[prettier-plugin-imports]: Could not process .vue file.  Please be sure that "@vue/compiler-sfc" is installed in your project.',
+        '[@ianvs/prettier-plugin-sort-imports]: Could not process .vue file.  Please be sure that "@vue/compiler-sfc" is installed in your project.',
       );
-      throw err;
     }
+    throw err;
   }
 }
 
@@ -68,7 +78,8 @@ function sortScript(
   { content, lang }: { content: string; lang?: string },
   options: PrettierOptions,
 ) {
-  let pluginClone = structuredClone(options.importOrderParsers);
+  const { importOrderParserPlugins = [] } = options;
+  let pluginClone = [...importOrderParserPlugins];
   const newPlugins: ImportOrderParserPlugin[] = [];
 
   if (!isTS(lang) || lang === 'tsx') {
@@ -88,7 +99,7 @@ function sortScript(
 
   const adjustedOptions = {
     ...options,
-    importOrderParsers: newPlugins,
+    importOrderParserPlugins: newPlugins,
   };
 
   return `\n${preprocessor(content, adjustedOptions)}\n`;

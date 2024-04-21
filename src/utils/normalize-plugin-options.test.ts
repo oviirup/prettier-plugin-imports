@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import {
-  _BUILTIN_MODULES,
-  _BUILTIN_MODULES_RGX,
-  _THIRD_PARTY_MODULES,
+  BUILTIN_MODULES_REGEX_STR,
+  BUILTIN_MODULES_SPECIAL_WORD,
+  DEFAULT_IMPORT_ORDER,
+  THIRD_PARTY_MODULES_SPECIAL_WORD,
 } from '../constants';
 import { NormalizableOptions } from '../types';
 import {
@@ -10,54 +11,70 @@ import {
   testingOnly,
 } from './normalize-plugin-options';
 
-describe('normalizeImportOrder', () => {
+describe('normalizeImportOrderOption', () => {
+  test('it should not inject defaults if [] is passed explicitly', () => {
+    expect(testingOnly.normalizeImportOrderOption([])).toEqual([]);
+  });
+
   test('it should inject required modules if not present', () => {
-    expect(testingOnly.normalizeImportOrder([])).toEqual([
-      _BUILTIN_MODULES_RGX,
-      _THIRD_PARTY_MODULES,
-    ]);
-    expect(testingOnly.normalizeImportOrder(['^[.]'])).toEqual([
-      _BUILTIN_MODULES_RGX,
-      _THIRD_PARTY_MODULES,
+    expect(testingOnly.normalizeImportOrderOption(['^[.]'])).toEqual([
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
       '^[.]',
     ]);
     expect(
-      testingOnly.normalizeImportOrder(['<THIRD_PARTY_MODULES>', '^[.]']),
-    ).toEqual([_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES, '^[.]']);
+      testingOnly.normalizeImportOrderOption(['<THIRD_PARTY_MODULES>', '^[.]']),
+    ).toEqual([
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
+      '^[.]',
+    ]);
     expect(
-      testingOnly.normalizeImportOrder(['<BUILTIN_MODULES>', '^[.]']),
-    ).toEqual([_THIRD_PARTY_MODULES, _BUILTIN_MODULES_RGX, '^[.]']);
+      testingOnly.normalizeImportOrderOption(['<BUILTIN_MODULES>', '^[.]']),
+    ).toEqual([
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
+      BUILTIN_MODULES_REGEX_STR,
+      '^[.]',
+    ]);
 
     expect(
-      testingOnly.normalizeImportOrder([
+      testingOnly.normalizeImportOrderOption([
         '<BUILTIN_MODULES>',
         '<THIRD_PARTY_MODULES>',
         '^[.]',
       ]),
-    ).toEqual([_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES, '^[.]']);
+    ).toEqual([
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
+      '^[.]',
+    ]);
   });
   test('it should inject required modules *after the first-separator& if any are present', () => {
-    expect(testingOnly.normalizeImportOrder([''])).toEqual([
+    expect(testingOnly.normalizeImportOrderOption([''])).toEqual([
       '',
-      _BUILTIN_MODULES_RGX,
-      _THIRD_PARTY_MODULES,
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
     ]);
     expect(
-      testingOnly.normalizeImportOrder([
+      testingOnly.normalizeImportOrderOption([
         '',
         '<BUILTIN_MODULES>',
         '<THIRD_PARTY_MODULES>',
       ]),
-    ).toEqual(['', _BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES]);
-    expect(testingOnly.normalizeImportOrder([' '])).toEqual([
-      ' ',
-      _BUILTIN_MODULES_RGX,
-      _THIRD_PARTY_MODULES,
-    ]);
-    expect(testingOnly.normalizeImportOrder(['', '', '^[.]'])).toEqual([
+    ).toEqual([
       '',
-      _BUILTIN_MODULES_RGX,
-      _THIRD_PARTY_MODULES,
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
+    ]);
+    expect(testingOnly.normalizeImportOrderOption([' '])).toEqual([
+      ' ',
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
+    ]);
+    expect(testingOnly.normalizeImportOrderOption(['', '', '^[.]'])).toEqual([
+      '',
+      BUILTIN_MODULES_REGEX_STR,
+      THIRD_PARTY_MODULES_SPECIAL_WORD,
       '',
       '^[.]',
     ]);
@@ -68,98 +85,158 @@ describe('examineAndNormalizePluginOptions', () => {
   test('it should set most defaults', () => {
     expect(
       examineAndNormalizePluginOptions({
-        importOrder: [],
-        importOrderParsers: [],
-        importOrderTSVersion: '1.0.0',
+        importOrder: DEFAULT_IMPORT_ORDER,
+        importOrderParserPlugins: [],
+        importOrderCaseSensitive: false,
+        importOrderTypeScriptVersion: '1.0.0',
         filepath: __filename,
       } as NormalizableOptions),
     ).toEqual({
-      hasSeparator: false,
-      importOrder: [_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES],
-      combineTypesAndImports: true,
+      hasAnyCustomGroupSeparatorsInImportOrder: false,
+      importOrder: [
+        BUILTIN_MODULES_REGEX_STR,
+        THIRD_PARTY_MODULES_SPECIAL_WORD,
+        '^[.]',
+      ],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
       plugins: [],
-      leadingSeparator: false,
+      provideGapAfterTopOfFileComments: false,
     });
   });
   test('it should detect group separators anywhere (relevant for side-effects)', () => {
     expect(
       examineAndNormalizePluginOptions({
-        importOrder: [_BUILTIN_MODULES, _THIRD_PARTY_MODULES, '', '^[./]'],
-        importOrderParsers: [],
-        importOrderTSVersion: '1.0.0',
+        importOrder: [
+          BUILTIN_MODULES_SPECIAL_WORD,
+          THIRD_PARTY_MODULES_SPECIAL_WORD,
+          '',
+          '^[./]',
+        ],
+        importOrderParserPlugins: [],
+        importOrderCaseSensitive: false,
+        importOrderTypeScriptVersion: '1.0.0',
         filepath: __filename,
       } as NormalizableOptions),
     ).toEqual({
-      hasSeparator: true,
-      importOrder: [_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES, '', '^[./]'],
-      combineTypesAndImports: true,
+      hasAnyCustomGroupSeparatorsInImportOrder: true,
+      importOrder: [
+        BUILTIN_MODULES_REGEX_STR,
+        THIRD_PARTY_MODULES_SPECIAL_WORD,
+        '',
+        '^[./]',
+      ],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
       plugins: [],
-      leadingSeparator: false,
+      provideGapAfterTopOfFileComments: false,
     });
   });
   test('it should detect top-of-file gap', () => {
     expect(
       examineAndNormalizePluginOptions({
         importOrder: [''],
-        importOrderParsers: [],
-        importOrderTSVersion: '1.0.0',
+        importOrderParserPlugins: [],
+        importOrderCaseSensitive: false,
+        importOrderTypeScriptVersion: '1.0.0',
         filepath: __filename,
       } as NormalizableOptions),
     ).toEqual({
-      hasSeparator: true,
-      importOrder: ['', _BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES],
-      combineTypesAndImports: true,
+      hasAnyCustomGroupSeparatorsInImportOrder: true,
+      importOrder: [
+        '',
+        BUILTIN_MODULES_REGEX_STR,
+        THIRD_PARTY_MODULES_SPECIAL_WORD,
+      ],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
       plugins: [],
-      leadingSeparator: true,
+      provideGapAfterTopOfFileComments: true,
     });
   });
   test('it should detect typescript-version-dependent-flags', () => {
     expect(
       examineAndNormalizePluginOptions({
-        importOrder: [],
-        importOrderParsers: ['typescript'],
-        importOrderTSVersion: '5.0.0',
+        importOrder: DEFAULT_IMPORT_ORDER,
+        importOrderParserPlugins: ['typescript'],
+        importOrderTypeScriptVersion: '5.0.0',
         filepath: __filename,
       } as NormalizableOptions),
     ).toEqual({
-      hasSeparator: false,
-      importOrder: [_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES],
-      combineTypesAndImports: true,
+      hasAnyCustomGroupSeparatorsInImportOrder: false,
+      importOrder: [
+        BUILTIN_MODULES_REGEX_STR,
+        THIRD_PARTY_MODULES_SPECIAL_WORD,
+        '^[.]',
+      ],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
       plugins: ['typescript'],
-      leadingSeparator: false,
+      provideGapAfterTopOfFileComments: false,
     });
   });
   test('it should call getExperimentalParserPlugins & filter', () => {
     // full tests for getExperimentalParserPlugins is in its own spec file
     expect(
       examineAndNormalizePluginOptions({
-        importOrder: [],
-        importOrderParsers: ['typescript', 'jsx'],
-        importOrderTSVersion: '5.0.0',
+        importOrder: DEFAULT_IMPORT_ORDER,
+        importOrderParserPlugins: ['typescript', 'jsx'],
+        importOrderTypeScriptVersion: '5.0.0',
+        importOrderCaseSensitive: false,
         filepath: __filename,
       } as NormalizableOptions),
     ).toEqual({
-      hasSeparator: false,
-      importOrder: [_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES],
-      combineTypesAndImports: true,
+      hasAnyCustomGroupSeparatorsInImportOrder: false,
+      importOrder: [
+        BUILTIN_MODULES_REGEX_STR,
+        THIRD_PARTY_MODULES_SPECIAL_WORD,
+        '^[.]',
+      ],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
       plugins: ['typescript'],
-      leadingSeparator: false,
+      provideGapAfterTopOfFileComments: false,
     });
   });
   test('it should not have a problem with a missing filepath', () => {
     expect(
       examineAndNormalizePluginOptions({
-        importOrder: [],
-        importOrderParsers: [],
-        importOrderTSVersion: '1.0.0',
+        importOrder: DEFAULT_IMPORT_ORDER,
+        importOrderParserPlugins: [],
+        importOrderCaseSensitive: false,
+        importOrderTypeScriptVersion: '1.0.0',
         filepath: undefined,
       } as NormalizableOptions),
     ).toEqual({
-      hasSeparator: false,
-      importOrder: [_BUILTIN_MODULES_RGX, _THIRD_PARTY_MODULES],
-      combineTypesAndImports: true,
+      hasAnyCustomGroupSeparatorsInImportOrder: false,
+      importOrder: [
+        BUILTIN_MODULES_REGEX_STR,
+        THIRD_PARTY_MODULES_SPECIAL_WORD,
+        '^[.]',
+      ],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
       plugins: [],
-      leadingSeparator: false,
+      provideGapAfterTopOfFileComments: false,
+    });
+  });
+
+  test('it should be disabled if importOrder is empty array', () => {
+    expect(
+      examineAndNormalizePluginOptions({
+        importOrder: [],
+        importOrderParserPlugins: [],
+        importOrderCaseSensitive: false,
+        importOrderTypeScriptVersion: '1.0.0',
+        filepath: __filename,
+      } as NormalizableOptions),
+    ).toEqual({
+      hasAnyCustomGroupSeparatorsInImportOrder: false,
+      importOrder: [],
+      importOrderCombineTypeAndValueImports: true,
+      importOrderCaseSensitive: false,
+      plugins: [],
+      provideGapAfterTopOfFileComments: false,
     });
   });
 });
