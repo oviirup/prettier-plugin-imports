@@ -11,9 +11,13 @@ export const newLineCharacters = '\n\n';
 export const chunkTypeUnsortable = 'unsortable';
 export const chunkTypeOther = 'other';
 
-/** Value imports (including top-level default imports) - import {Thing} from ... or import Thing from ... */
+/**
+ * Value imports (including top-level default imports)\
+ * `- import {Thing} from ...` or\
+ * `import Thing from ...`
+ */
 export const importFlavorValue = 'value';
-/** import type {} from ...  */
+/** Import type {} from ... */
 export const importFlavorType = 'type';
 export const importFlavorSideEffect = 'side-effect';
 export const importFlavorIgnore = 'prettier-ignore';
@@ -32,9 +36,15 @@ export const _TYPES_MODULES = '<TYPES>';
 
 const _NEW_LINE = 'PRETTIER_PLUGIN_IMPORTS_NEW_LINE';
 
-/** Use this to force a newline at top-level scope (good for newlines generated between import blocks) */
+/**
+ * Use this to force a newline at top-level scope (good for newlines generated
+ * between import blocks)
+ */
 export const newLineNode = expressionStatement(stringLiteral(_NEW_LINE));
-/** Use this if you want to force a newline, but you're attaching to leading/inner/trailing Comments */
+/**
+ * Use this if you want to force a newline, but you're attaching to
+ * leading/inner/trailing Comments
+ */
 export const forceANewlineUsingACommentStatement = () => ({
   type: 'CommentLine' as const,
   value: 'PRETTIER_PLUGIN_IMPORTS_NEWLINE_COMMENT',

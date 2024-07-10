@@ -10,7 +10,9 @@ import type { ImportDeclaration } from '@babel/types';
  * Takes the original nodes before sorting and the final nodes after sorting.
  * Adjusts the comments on the final nodes so that they match the comments as
  * they were in the original nodes.
- * @param originalDeclarationNodes A list of nodes in the order as they were originally.
+ *
+ * @param originalDeclarationNodes A list of nodes in the order as they were
+ *   originally.
  * @param finalNodes The same set of nodes, but in the final sorting order.
  * @returns A copied and adjusted set of nodes, containing comments
  */

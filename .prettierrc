@@ -7,9 +7,9 @@
   ],
   "importOrderTSVersion": "5.5.3",
   "plugins": [
+    "./dist/index.js",
     "prettier-plugin-pkg",
-    "prettier-plugin-jsdoc",
-    "./dist/index.js"
+    "prettier-plugin-jsdoc"
   ],
   "printWidth": 80,
   "singleQuote": true,

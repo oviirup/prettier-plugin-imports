@@ -2,8 +2,9 @@ import type { ParserPlugin, ParserPluginWithOptions } from '@babel/parser';
 
 /**
  * Returns a list of babel parser plugin names
- * @param importOrderParsers array of experimental babel parser plugins
- * @returns list of parser plugins to be passed to babel parser
+ *
+ * @param importOrderParsers Array of experimental babel parser plugins
+ * @returns List of parser plugins to be passed to babel parser
  */
 export const getExperimentalParserPlugins = (
   importOrderParsers: string[],
@@ -29,11 +30,12 @@ export const getExperimentalParserPlugins = (
 };
 
 /**
- * Checks whether a specified plugin is included in importOrderParsers.
- * More fancy than just a `.includes()` because importOrderParsers can contain plugins with configuration
+ * Checks whether a specified plugin is included in importOrderParsers. More
+ * fancy than just a `.includes()` because importOrderParsers can contain
+ * plugins with configuration
  *
- * @param importOrderParsers array of experimental babel parser plugins
- * @returns true if the plugin is in the list
+ * @param importOrderParsers Array of experimental babel parser plugins
+ * @returns True if the plugin is in the list
  */
 export const hasPlugin = (
   importOrderParsers: string[],

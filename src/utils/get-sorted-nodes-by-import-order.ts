@@ -11,8 +11,9 @@ import type {
 
 /**
  * This function returns the given nodes, sorted in the order as indicated by
- * the importOrder array from the given options.
- * The plugin considers these import nodes as local import declarations.
+ * the importOrder array from the given options. The plugin considers these
+ * import nodes as local import declarations.
+ *
  * @param originalNodes A subset (of all import nodes) that should be sorted.
  * @param options Options to influence the behavior of the sorting algorithm.
  */

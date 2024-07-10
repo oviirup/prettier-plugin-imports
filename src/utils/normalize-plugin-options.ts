@@ -33,20 +33,23 @@ function normalizeImportOrder(order: NormalizableOptions['importOrder']) {
 }
 
 /**
- * isSeparator checks if the provided pattern is intended to be used as an import separator,
+ * IsSeparator checks if the provided pattern is intended to be used as an
+ * import separator,
  */
 export function isSeparator(pattern?: string) {
   return pattern?.trim() === '';
 }
 
 /**
- * Verifies that our special words that must always be there are present on importOrder
- * Verifies that parser plugins are inferred correctly for certain file extensions.
+ * Verifies that our special words that must always be there are present on
+ * importOrder Verifies that parser plugins are inferred correctly for certain
+ * file extensions.
  *
  * Configures certain behavior flags such as
- *  - when to use certain typescript syntax
- *  - when to inject blank lines after top-of-file comments
- *  - when to inject blank lines around groups / side-effect nodes.
+ *
+ * - When to use certain typescript syntax
+ * - When to inject blank lines after top-of-file comments
+ * - When to inject blank lines around groups / side-effect nodes.
  */
 export function examineAndNormalizePluginOptions(
   options: NormalizableOptions,

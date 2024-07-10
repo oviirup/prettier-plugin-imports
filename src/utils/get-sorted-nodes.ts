@@ -16,9 +16,9 @@ import type { GetSortedNodes, ImportChunk, ImportOrLine } from '../types';
  * without any import specifiers. It does this by splitting the import nodes at
  * each side effect node, then sorting only the non side effect import nodes
  * between the side effect nodes according to the given options.
+ *
  * @param nodes All import nodes that should be sorted.
  * @param options Options to influence the behavior of the sorting algorithm.
- *
  * @returns A sorted array of the remaining import nodes
  */
 export const getSortedNodes: GetSortedNodes = (nodes, options) => {

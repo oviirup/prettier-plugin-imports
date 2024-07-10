@@ -7,13 +7,16 @@ import type { Directive, InterpreterDirective, Statement } from '@babel/types';
 
 /**
  * This function generates a code string from the passed nodes.
- * @param nodesToOutput The remaining imports which should be rendered. (Node specifiers & types may be mutated)
- * @param allOriginalImportNodes All import nodes that were originally relevant. (This includes nodes that need to be deleted!)
+ *
+ * @param nodesToOutput The remaining imports which should be rendered. (Node
+ *   specifiers & types may be mutated)
+ * @param allOriginalImportNodes All import nodes that were originally relevant.
+ *   (This includes nodes that need to be deleted!)
  * @param originalCode The original input code that was passed to this plugin.
- * @param directives All directive prologues from the original code (e.g.
- * `"use strict";`).
+ * @param directives All directive prologues from the original code (e.g. `"use
+ *   strict";`).
  * @param interpreter Optional interpreter directives, if present (e.g.
- * `#!/bin/node`).
+ *   `#!/bin/node`).
  */
 export const getCodeFromAst = ({
   nodesToOutput,

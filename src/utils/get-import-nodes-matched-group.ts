@@ -15,10 +15,11 @@ const cachedRegExp = (regExp: string) => {
 /**
  * Get the regexp group to keep the import nodes.
  *
- * This comes near the end of processing, after import declaration nodes have been combined or exploded.
+ * This comes near the end of processing, after import declaration nodes have
+ * been combined or exploded.
  *
  * @param node
- * @param importOrder a list of [regexp or special-word] groups (no separators)
+ * @param importOrder A list of [regexp or special-word] groups (no separators)
  */
 export const getImportNodesMatchedGroup = (
   node: ImportDeclaration,

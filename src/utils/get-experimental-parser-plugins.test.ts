@@ -1,39 +1,39 @@
-import { expect, test } from 'vitest'
-import { getExperimentalParserPlugins } from './get-experimental-parser-plugins'
+import { expect, test } from 'vitest';
+import { getExperimentalParserPlugins } from './get-experimental-parser-plugins';
 
 test('it should return empty list', () => {
-	expect(getExperimentalParserPlugins([])).toEqual([])
-})
+  expect(getExperimentalParserPlugins([])).toEqual([]);
+});
 
 test('it should return flow and decorators', () => {
-	expect(getExperimentalParserPlugins(['flow', 'decorators'])).toEqual([
-		'flow',
-		'decorators',
-	])
-})
+  expect(getExperimentalParserPlugins(['flow', 'decorators'])).toEqual([
+    'flow',
+    'decorators',
+  ]);
+});
 
 test('it should return decorators with parsed options', () => {
-	expect(
-		getExperimentalParserPlugins([
-			'["decorators", { "decoratorsBeforeExport": true }]',
-		]),
-	).toEqual([['decorators', { decoratorsBeforeExport: true }]])
-})
+  expect(
+    getExperimentalParserPlugins([
+      '["decorators", { "decoratorsBeforeExport": true }]',
+    ]),
+  ).toEqual([['decorators', { decoratorsBeforeExport: true }]]);
+});
 
 test('it should return decorators with parsed options', () => {
-	expect(
-		getExperimentalParserPlugins([
-			'flow',
-			'["decorators", { "decoratorsBeforeExport": true }]',
-		]),
-	).toEqual(['flow', ['decorators', { decoratorsBeforeExport: true }]])
-})
+  expect(
+    getExperimentalParserPlugins([
+      'flow',
+      '["decorators", { "decoratorsBeforeExport": true }]',
+    ]),
+  ).toEqual(['flow', ['decorators', { decoratorsBeforeExport: true }]]);
+});
 
 test('it should throw an Error for invalid JSON', () => {
-	expect(() =>
-		getExperimentalParserPlugins([
-			'flow',
-			'["decorators", { decoratorsBeforeExport: true }]',
-		]),
-	).toThrowError('Invalid JSON in importOrderParsers: ')
-})
+  expect(() =>
+    getExperimentalParserPlugins([
+      'flow',
+      '["decorators", { decoratorsBeforeExport: true }]',
+    ]),
+  ).toThrowError('Invalid JSON in importOrderParsers: ');
+});

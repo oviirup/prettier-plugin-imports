@@ -3,9 +3,10 @@ import { ExplodeTypeAndValueSpecifiers } from '../types';
 import type { ImportSpecifier } from '@babel/types';
 
 /**
- * Breaks apart import declarations containing mixed type and value imports into separate declarations.
+ * Breaks apart import declarations containing mixed type and value imports into
+ * separate declarations.
  *
- * e.g.
+ * E.g.
  *
  * ```diff
  * - import foo, { bar, type Baz } from './src';

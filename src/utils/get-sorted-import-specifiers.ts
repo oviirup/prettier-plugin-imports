@@ -5,7 +5,7 @@ import { naturalSort } from './natural-sort';
  * This function returns import nodes with alphabetically sorted module
  * specifiers.
  *
- * type imports are sorted separately, and placed after value imports.
+ * Type imports are sorted separately, and placed after value imports.
  *
  * Comments need to be fixed up so they attach to the right objects.
  *

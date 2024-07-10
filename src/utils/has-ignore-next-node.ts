@@ -1,8 +1,6 @@
 import type { Comment } from '@babel/types';
 
-/**
- * Detects if `// prettier-ignore` is present in the provided array of comments.
- */
+/** Detects if `// prettier-ignore` is present in the provided array of comments. */
 export const hasIgnoreNextNode = (comments: Comment[] | null | undefined) =>
   (comments ?? []).some(isIgnoreNextNode);
 

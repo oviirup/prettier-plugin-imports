@@ -54,25 +54,37 @@ export interface CommentEntry {
   ownerIsSpecifier: boolean;
   /** Special case for leaving comments at top-of-file */
   needsTopOfFileOwner?: boolean;
-  /** Comments that follow the last specifier must stay at the bottom of their import block! */
+  /**
+   * Comments that follow the last specifier must stay at the bottom of their
+   * import block!
+   */
   needsLastSpecifierOwner?: boolean;
 
   commentId: string;
   comment: Comment;
   association: CommentAssociation;
 
-  /** We need to defer some claims and prioritize them after initial processing - higher is later processing */
+  /**
+   * We need to defer some claims and prioritize them after initial processing -
+   * higher is later processing
+   */
   processingPriority: number;
 }
 
-/** Magic number so that Specifier-linked comments are processed after other Comment-types  */
+/**
+ * Magic number so that Specifier-linked comments are processed after other
+ * Comment-types
+ */
 const MAX_COUNT_OF_LIKELY_IMPORT_STATEMENTS = 10000;
 
 /** Lower number priority will be processed earlier! */
 enum DeferredCommentClaimPriorityAdjustment {
   leadingSpecifier = MAX_COUNT_OF_LIKELY_IMPORT_STATEMENTS * 1,
   leadingAboveAllImports = MAX_COUNT_OF_LIKELY_IMPORT_STATEMENTS * 2,
-  /** This must stay a trailing comment, because it might be a directive preceding `} from "./foo"` */
+  /**
+   * This must stay a trailing comment, because it might be a directive
+   * preceding `} from "./foo"`
+   */
   trailingCommentForSpecifier = MAX_COUNT_OF_LIKELY_IMPORT_STATEMENTS * 3,
 }
 
@@ -82,8 +94,8 @@ const debugLog: typeof console.debug | undefined = undefined as any; // undefine
 /**
  * Private helper for populating a comment-registry
  *
- * Walking the AST can find the same comment in multiple places,
- *  so we need to collect them all, and attach them in our preferred order.
+ * Walking the AST can find the same comment in multiple places, so we need to
+ * collect them all, and attach them in our preferred order.
  */
 const attachCommentsToRegistryMap = ({
   commentRegistry,
@@ -97,7 +109,8 @@ const attachCommentsToRegistryMap = ({
 }: {
   commentRegistry: Map<string, CommentEntry>;
   /**
-   * This parameter lets us defer some comment attachments and process them later.
+   * This parameter lets us defer some comment attachments and process them
+   * later.
    */
   deferredCommentClaims: CommentEntry[];
 
@@ -229,8 +242,9 @@ const attachCommentsToRegistryMap = ({
 };
 
 /**
- * Utility that walks ImportDeclarations and the associated comment nodes
- * It returns a list of CommentEntry objects that tell you which nodes comments should be associated with
+ * Utility that walks ImportDeclarations and the associated comment nodes It
+ * returns a list of CommentEntry objects that tell you which nodes comments
+ * should be associated with
  */
 export const getCommentRegistryFromImportDeclarations = ({
   firstImport,
@@ -251,9 +265,10 @@ export const getCommentRegistryFromImportDeclarations = ({
   const deferredCommentClaims: CommentEntry[] = [];
 
   /**
-   * Babel isn't as aggressive in pairing comments as both leading and trailing with Specifiers (as it does with ImportDeclarations)
-   * This table helps us re-parent to the best specifier.
-   * This registry is keyed by (original) line number, first witnessed specifier for a given line number wins.
+   * Babel isn't as aggressive in pairing comments as both leading and trailing
+   * with Specifiers (as it does with ImportDeclarations) This table helps us
+   * re-parent to the best specifier. This registry is keyed by (original) line
+   * number, first witnessed specifier for a given line number wins.
    */
   const specifierRegistry = new Map<number, SomeSpecifier>();
   outputNodes
@@ -393,13 +408,15 @@ export function attachCommentsToOutputNodes(
 
   let hasPatchedNewFirstImportLocation = false;
   /**
-   * Put the first import in the right spot (where the original first import started).
-   *  Otherwise, comments at the top of the file will not be formatted correctly.
+   * Put the first import in the right spot (where the original first import
+   * started). Otherwise, comments at the top of the file will not be formatted
+   * correctly.
    *
-   * This is a little tricky, because the new first import might have leading comments,
-   *  and we have to move the node and all comments the same distance
+   * This is a little tricky, because the new first import might have leading
+   * comments, and we have to move the node and all comments the same distance
    *
-   * This works since late 2022, Babel uses `loc` (if-present) to hint how to render for some cases.
+   * This works since late 2022, Babel uses `loc` (if-present) to hint how to
+   * render for some cases.
    */
   const patchNewFirstImportLocationOnlyOnce = () => {
     if (hasPatchedNewFirstImportLocation) {

@@ -57,8 +57,9 @@ export type ImportRelated = ImportOrLine | SomeSpecifier;
 
 /**
  * The PrettierOptions after validation/normalization
- * - behavior flags are derived from the base options
- * - plugins is dynamically modified by filepath
+ *
+ * - Behavior flags are derived from the base options
+ * - Plugins is dynamically modified by filepath
  */
 export interface ExtendedOptions {
   importOrder: PrettierOptions['importOrder'];

@@ -1,8 +1,6 @@
 import type { ExpressionStatement, ImportDeclaration } from '@babel/types';
 
-/**
- * Test helper, to verify sort order and newline placement
- */
+/** Test helper, to verify sort order and newline placement */
 // prettier-ignore
 export const getSortedNodesNamesAndNewlines = (
 	imports: (ImportDeclaration | ExpressionStatement)[],

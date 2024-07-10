@@ -1,11 +1,11 @@
-import { expect, test } from 'vitest'
-import { getImportFlavorOfNode } from './get-import-flavor-of-node'
-import { getImportNodes } from './get-import-nodes'
+import { expect, test } from 'vitest';
+import { getImportFlavorOfNode } from './get-import-flavor-of-node';
+import { getImportNodes } from './get-import-nodes';
 
 test('should correctly classify a bunch of import expressions', () => {
-	expect(
-		getImportNodes(
-			`
+  expect(
+    getImportNodes(
+      `
 import "./side-effects";
 import { a } from "a";
 import type { b } from "b";
@@ -18,9 +18,9 @@ const f = require("f"); // Doesn't count as import
 // prettier-ignore
 import { g } from "g";
 `,
-			{ plugins: ['typescript'] },
-		).map((node) => getImportFlavorOfNode(node)),
-	).toMatchInlineSnapshot(`
+      { plugins: ['typescript'] },
+    ).map((node) => getImportFlavorOfNode(node)),
+  ).toMatchInlineSnapshot(`
         [
           "side-effect",
           "value",
@@ -29,5 +29,5 @@ import { g } from "g";
           "value",
           "prettier-ignore",
         ]
-    `)
-})
+    `);
+});

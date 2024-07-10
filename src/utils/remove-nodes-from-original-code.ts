@@ -10,7 +10,10 @@ import type {
 /** A range between a start position (inclusive) and an end position (exclusive). */
 type Range = readonly [start: number, end: number];
 
-/** An optional range between a start position (inclusive) and an end position (exclusive). */
+/**
+ * An optional range between a start position (inclusive) and an end position
+ * (exclusive).
+ */
 type OptionalRange = readonly [
   start: number | null | undefined,
   end: number | null | undefined,
@@ -34,8 +37,8 @@ function hasRange(range: OptionalRange): range is Range {
 /**
  * @param range1 One range to check.
  * @param range2 Another range to check.
- * @param `true` if both ranges have some overlap. This overlap may consist of
- * a single point, i.e. `[2, 5)` and `[4, 8)` are considered overlapping.
+ * @param `true` If both ranges have some overlap. This overlap may consist of a
+ *   single point, i.e. `[2, 5)` and `[4, 8)` are considered overlapping.
  */
 function hasOverlap(range1: Range, range2: Range): boolean {
   return range1[1] > range2[0] && range2[1] > range1[0];
@@ -44,6 +47,7 @@ function hasOverlap(range1: Range, range2: Range): boolean {
 /**
  * Given two ranges that are known to overlap, constructs a new range
  * representing the single range enclosing both ranges.
+ *
  * @param range1 One range to process.
  * @param range2 Another range to process.
  * @returns A single range representing the union of both ranges.
@@ -56,10 +60,11 @@ function mergeOverlappingRanges(range1: Range, range2: Range): Range {
  * Given a list of ordered, possibly overlapping (non-disjoint) ranges,
  * constructs a new list of ranges that consists entirely of disjoint ranges.
  * The new list is also ordered.
- * @param A list of ranges that may be overlapping, but are ordered by their
- * start position.
- * @return A list of disjoint ranges that are also ordered by their start
- * position.
+ *
+ * @param A List of ranges that may be overlapping, but are ordered by their
+ *   start position.
+ * @returns A list of disjoint ranges that are also ordered by their start
+ *   position.
  */
 function mergeRanges(ranges: Range[]): Range[] {
   // Start with a result list initialized to the empty list
@@ -81,8 +86,8 @@ function mergeRanges(ranges: Range[]): Range[] {
 }
 
 /**
- * Takes a list of ordered, disjoint, non-overlapping ranges and a range
- * `[0, totalLength)` that encloses all those ranges.
+ * Takes a list of ordered, disjoint, non-overlapping ranges and a range `[0,
+ * totalLength)` that encloses all those ranges.
  *
  * Constructs a new list of ranges representing the negation of the ranges with
  * respect to the enclosing range `[0, totalLength)`. Put in other words,
@@ -90,17 +95,17 @@ function mergeRanges(ranges: Range[]): Range[] {
  *
  * More formally, let `r_1`, `r_2`, ..., `r_n` denote the sets represented by
  * the given ranges; and let `r` be the set `[0, totalLength)`. Then this
- * function returns a list of ranges representing the set
- *
- * > r \ r_1 \ r_2 \ ... \ r_n
+ * function returns a list of ranges representing the set> R \ r_1 \ r_2 \ ... \
+ * r_n
  *
  * (where `\` is the set negation operator)
- * @param ranges  A list of disjoint (non-overlapping) ranges ordered by
- * their start position.
- * @param totalLength The end of the enclosing range from which to subtract
- * the given ranges.
+ *
+ * @param ranges A list of disjoint (non-overlapping) ranges ordered by their
+ *   start position.
+ * @param totalLength The end of the enclosing range from which to subtract the
+ *   given ranges.
  * @returns A list of ranges representing the inverse of the given ranges with
- * respect to the enclosing range.
+ *   respect to the enclosing range.
  */
 function invertRanges(ranges: Range[], totalLength: number): Range[] {
   // We'd run into out-of-bounds checks if we performed the rest of the
@@ -156,10 +161,11 @@ function invertRanges(ranges: Range[], totalLength: number): Range[] {
 /**
  * Given a piece of code and a list of nodes that appear in that code, removes
  * all those nodes from the code.
+ *
  * @param code The whole file as text
  * @param nodes List of nodes to be removed from the code.
- * @return The given code with all parts of the code removed that correspond to
- * one of the given nodes.
+ * @returns The given code with all parts of the code removed that correspond to
+ *   one of the given nodes.
  */
 export const removeNodesFromOriginalCode = (
   code: string,

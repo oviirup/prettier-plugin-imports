@@ -44,13 +44,13 @@ function selectMergeableNodesByImportFlavor(
 /**
  * Returns the "source" (i.e. module name or path) of an import declaration
  *
- * e.g.: `import foo from "./foo";` -- "./foo" is the source.
+ * E.g.: `import foo from "./foo";` -- "./foo" is the source.
  */
 function selectNodeImportSource(node: ImportDeclaration) {
   return node.source.value;
 }
 
-/** e.g. import * as Namespace from "someModule" */
+/** E.g. import * as Namespace from "someModule" */
 function nodeIsImportNamespaceSpecifier(
   node: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier,
 ): node is ImportNamespaceSpecifier {
@@ -59,9 +59,7 @@ function nodeIsImportNamespaceSpecifier(
 /**
  * Default type or value import
  *
- * e.g.
- * import Default from "someModule"
- * import type Default from "someModule"
+ * E.g. import Default from "someModule" import type Default from "someModule"
  */
 function nodeIsImportDefaultSpecifier(
   node: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier,
@@ -131,9 +129,11 @@ function mergeIsSafe(
 }
 
 /**
- * Mutates the modeToKeep, adding the import specifiers and comments from the nodeToForget.
+ * Mutates the modeToKeep, adding the import specifiers and comments from the
+ * nodeToForget.
  *
- * @returns (node to keep if we should delete the other node | null to keep everything)
+ * @returns (node to keep if we should delete the other node | null to keep
+ *   everything)
  */
 function mergeNodes(
   nodeToKeep: ImportDeclaration,
@@ -173,9 +173,9 @@ function mergeNodes(
 }
 
 /**
- * Modifies context, deleteContext,
- * case A: context has no node for an import source, then it's assigned.
- * case B: context has a node for an import source, then it's merged, and old node is added to deleteContext.
+ * Modifies context, deleteContext, case A: context has no node for an import
+ * source, then it's assigned. case B: context has a node for an import source,
+ * then it's merged, and old node is added to deleteContext.
  */
 function mutateContextAndMerge({
   context,
@@ -214,13 +214,16 @@ function mutateContextAndMerge({
 }
 
 /**
- * Accepts an array of nodes from a given chunk, and merges candidates that have a matching import-flavor
+ * Accepts an array of nodes from a given chunk, and merges candidates that have
+ * a matching import-flavor
  *
  * In other words each group will be merged if they have the same source:
+ *
  * - `import type` expressions from the same source
  * - `import Name, {a, b}` from the same source
  *
- * `import type {Foo}` expressions won't be converted into `import {type Foo}` or vice versa
+ * `import type {Foo}` expressions won't be converted into `import {type Foo}`
+ * or vice versa
  */
 export const mergeNodesWithMatchingImportFlavors: MergeNodesWithMatchingImportFlavors =
   (input, { combineTypesAndImports }) => {

@@ -45,9 +45,10 @@ function isTS(lang?: string) {
  * Configures correct babel plugins, sorts imports in a script or setupScript,
  * and replaces that script/setupScript within the original code
  *
- * Much of this was adapted from https://github.com/vuejs/vue/blob/49b6bd4264c25ea41408f066a1835f38bf6fe9f1/packages/compiler-sfc/src/compileScript.ts#L118-L134
+ * Much of this was adapted from
+ * https://github.com/vuejs/vue/blob/49b6bd4264c25ea41408f066a1835f38bf6fe9f1/packages/compiler-sfc/src/compileScript.ts#L118-L134
  *
- * @param param0 a script or setupScript
+ * @param param0 A script or setupScript
  * @param code Source code of the file
  * @param options Prettier options
  * @returns Original code with sorted imports in the script provided
