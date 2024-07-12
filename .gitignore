@@ -11,3 +11,9 @@ logs
 *-debug.log*
 *-error.log*
 report.*.json
+
+# package-lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lockb
