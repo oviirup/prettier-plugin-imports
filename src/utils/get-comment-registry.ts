@@ -419,6 +419,8 @@ export function attachCommentsToOutputNodes(
           ...firstImport.loc?.end,
           line: firstImport.loc?.end.line + commentHeight,
         },
+        filename: '',
+        identifierName: '',
       };
 
       const moveDist = originalLoc.start.line - newFirstImport.loc.start.line;
@@ -520,8 +522,10 @@ function ensureEmptyStatementAtFront(outputNodes: ImportOrLine[]) {
   }
   const dummy = emptyStatement();
   dummy.loc = {
-    start: { line: 0, column: 0 },
-    end: { line: 0, column: 0 },
+    start: { line: 0, column: 0, index: 0 },
+    end: { line: 0, column: 0, index: 0 },
+    filename: '',
+    identifierName: '',
   };
   outputNodes.unshift(dummy);
 }
