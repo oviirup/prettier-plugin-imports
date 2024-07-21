@@ -12,12 +12,16 @@
   },
   "license": "MIT",
   "private": false,
-  "main": "plugin.js",
-  "module": "plugin.mjs",
-  "types": "plugin.d.ts",
-  "files": [
-    "plugin.*"
-  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "types": "dist/index.d.ts",
   "keywords": [
     "prettier",
     "plugin",
