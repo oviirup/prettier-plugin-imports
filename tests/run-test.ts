@@ -4,9 +4,9 @@ import fs from 'fs';
 import { extname, resolve } from 'path';
 import { format } from 'prettier';
 import { expect, test } from 'vitest';
-import * as plugin from '../source';
-import type { PluginConfig } from '../source/plugin';
-import type { PrettierOptions } from '../source/types';
+import * as plugin from '../src';
+import type { PluginConfig } from '../src/plugin';
+import type { PrettierOptions } from '../src/types';
 
 type Parser = PrettierOptions['parser'];
 

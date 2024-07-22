@@ -8,9 +8,9 @@ import type { ImportSpecifier } from '@babel/types';
  * e.g.
  *
  * ```diff
- * - import foo, { bar, type Baz } from './source';
- * + import foo, { bar } from './source';
- * + import type { Baz } from './source';
+ * - import foo, { bar, type Baz } from './src';
+ * + import foo, { bar } from './src';
+ * + import type { Baz } from './src';
  * ```
  */
 export const explodeTypeAndValueSpecifiers: ExplodeTypeAndValueSpecifiers = (

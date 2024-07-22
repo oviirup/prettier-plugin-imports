@@ -127,8 +127,8 @@ import { D1, type D2 } from "d";
 
 test('should combine type import and default import', async () => {
 	const code = `
-import type {MyType} from './source';
-import defaultValue from './source';
+import type {MyType} from './src';
+import defaultValue from './src';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
 		plugins: ['typescript'],
@@ -143,14 +143,14 @@ import defaultValue from './source';
 	})
 
 	expect(await format(formatted, { parser: 'typescript' }))
-		.toEqual(`import defaultValue, { type MyType } from "./source";
+		.toEqual(`import defaultValue, { type MyType } from "./src";
 `)
 })
 
 test('should not combine type import and namespace import', async () => {
 	const code = `
-import type {MyType} from './source';
-import * as Namespace from './source';
+import type {MyType} from './src';
+import * as Namespace from './src';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
 		plugins: ['typescript'],
@@ -165,15 +165,15 @@ import * as Namespace from './source';
 	})
 
 	expect(await format(formatted, { parser: 'typescript' }))
-		.toEqual(`import type { MyType } from "./source";
-import * as Namespace from "./source";
+		.toEqual(`import type { MyType } from "./src";
+import * as Namespace from "./src";
 `)
 })
 
 test('should support aliased named imports', async () => {
 	const code = `
-import type {MyType} from './source';
-import {value as alias} from './source';
+import type {MyType} from './src';
+import {value as alias} from './src';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
 		plugins: ['typescript'],
@@ -188,14 +188,14 @@ import {value as alias} from './source';
 	})
 
 	expect(await format(formatted, { parser: 'typescript' }))
-		.toEqual(`import { value as alias, type MyType } from "./source";
+		.toEqual(`import { value as alias, type MyType } from "./src";
 `)
 })
 
 test('should combine multiple imports from the same source', async () => {
 	const code = `
-import type {MyType, SecondType} from './source';
-import {value, SecondValue} from './source';
+import type {MyType, SecondType} from './src';
+import {value, SecondValue} from './src';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
 		plugins: ['typescript'],
@@ -210,15 +210,15 @@ import {value, SecondValue} from './source';
 	})
 
 	expect(await format(formatted, { parser: 'typescript' }))
-		.toEqual(`import { SecondValue, value, type MyType, type SecondType } from "./source";
+		.toEqual(`import { SecondValue, value, type MyType, type SecondType } from "./src";
 `)
 })
 
 test('should combine multiple groups of imports', async () => {
 	const code = `
-import type {MyType} from './source';
+import type {MyType} from './src';
 import type {OtherType} from './other';
-import {value} from './source';
+import {value} from './src';
 import {otherValue} from './other';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
@@ -235,16 +235,16 @@ import {otherValue} from './other';
 
 	expect(await format(formatted, { parser: 'typescript' }))
 		.toEqual(`import { otherValue, type OtherType } from "./other";
-import { value, type MyType } from "./source";
+import { value, type MyType } from "./src";
 `)
 })
 
 test('should combine multiple imports statements from the same source', async () => {
 	const code = `
-import type {MyType} from './source';
-import type {SecondType} from './source';
-import {value} from './source';
-import {SecondValue} from './source';
+import type {MyType} from './src';
+import type {SecondType} from './src';
+import {value} from './src';
+import {SecondValue} from './src';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
 		plugins: ['typescript'],
@@ -259,16 +259,16 @@ import {SecondValue} from './source';
 	})
 
 	expect(await format(formatted, { parser: 'typescript' }))
-		.toEqual(`import { SecondValue, value, type MyType, type SecondType } from "./source";
+		.toEqual(`import { SecondValue, value, type MyType, type SecondType } from "./src";
 `)
 })
 
 test('should not impact imports from different sources', async () => {
 	const code = `
-import type {MyType} from './source';
+import type {MyType} from './src';
 import type {OtherType} from './other';
 import {thirdValue} from './third'
-import {value} from './source';
+import {value} from './src';
 `
 	const allOriginalImportNodes = getImportNodes(code, {
 		plugins: ['typescript'],
@@ -284,7 +284,7 @@ import {value} from './source';
 
 	expect(await format(formatted, { parser: 'typescript' }))
 		.toEqual(`import type { OtherType } from "./other";
-import { value, type MyType } from "./source";
+import { value, type MyType } from "./src";
 import { thirdValue } from "./third";
 `)
 })

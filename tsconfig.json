@@ -13,5 +13,5 @@
     "target": "ES2021"
   },
   "exclude": ["node_modules"],
-  "include": ["./source/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }
