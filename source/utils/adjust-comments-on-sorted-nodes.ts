@@ -1,9 +1,10 @@
-import { removeComments, type ImportDeclaration } from '@babel/types'
-import { CommentAttachmentOptions, ImportOrLine } from '../types'
+import { removeComments } from '@babel/types';
+import { CommentAttachmentOptions, ImportOrLine } from '../types';
 import {
-	attachCommentsToOutputNodes,
-	getCommentRegistryFromImportDeclarations,
-} from './get-comment-registry'
+  attachCommentsToOutputNodes,
+  getCommentRegistryFromImportDeclarations,
+} from './get-comment-registry';
+import type { ImportDeclaration } from '@babel/types';
 
 /**
  * Takes the original nodes before sorting and the final nodes after sorting.
@@ -14,40 +15,40 @@ import {
  * @returns A copied and adjusted set of nodes, containing comments
  */
 export const adjustCommentsOnSortedNodes = (
-	originalDeclarationNodes: readonly ImportDeclaration[],
-	finalNodes: readonly ImportOrLine[],
-	options: CommentAttachmentOptions,
+  originalDeclarationNodes: readonly ImportDeclaration[],
+  finalNodes: readonly ImportOrLine[],
+  options: CommentAttachmentOptions,
 ) => {
-	// get import nodes
-	const nodes: ImportDeclaration[] = finalNodes.filter(
-		(node): node is ImportDeclaration => node.type === 'ImportDeclaration',
-	)
-	if (originalDeclarationNodes.length === 0 || nodes.length === 0) {
-		// Nothing to do, because there are no ImportDeclarations!
-		return [...finalNodes]
-	}
+  // get import nodes
+  const nodes: ImportDeclaration[] = finalNodes.filter(
+    (node): node is ImportDeclaration => node.type === 'ImportDeclaration',
+  );
+  if (originalDeclarationNodes.length === 0 || nodes.length === 0) {
+    // Nothing to do, because there are no ImportDeclarations!
+    return [...finalNodes];
+  }
 
-	const firstImport = originalDeclarationNodes[0]
+  const firstImport = originalDeclarationNodes[0];
 
-	const registry = getCommentRegistryFromImportDeclarations({
-		outputNodes: nodes,
-		firstImport,
-	})
+  const registry = getCommentRegistryFromImportDeclarations({
+    outputNodes: nodes,
+    firstImport,
+  });
 
-	// Make a copy of the nodes for easier debugging & remove the existing comments to reattach them
-	// (removeComments clones the nodes internally, so we don't need to do that ourselves)
-	const finalNodesClone = finalNodes.map((n) => {
-		const noDirectCommentsNode = removeComments(n)
-		if (noDirectCommentsNode.type === 'ImportDeclaration') {
-			// Remove comments isn't recursive, so we need to clone/modify the specifiers manually
-			noDirectCommentsNode.specifiers = (
-				noDirectCommentsNode.specifiers || []
-			).map((s) => removeComments(s))
-		}
-		return noDirectCommentsNode
-	})
+  // Make a copy of the nodes for easier debugging & remove the existing comments to reattach them
+  // (removeComments clones the nodes internally, so we don't need to do that ourselves)
+  const finalNodesClone = finalNodes.map((n) => {
+    const noDirectCommentsNode = removeComments(n);
+    if (noDirectCommentsNode.type === 'ImportDeclaration') {
+      // Remove comments isn't recursive, so we need to clone/modify the specifiers manually
+      noDirectCommentsNode.specifiers = (
+        noDirectCommentsNode.specifiers || []
+      ).map((s) => removeComments(s));
+    }
+    return noDirectCommentsNode;
+  });
 
-	attachCommentsToOutputNodes(registry, finalNodesClone, firstImport, options)
+  attachCommentsToOutputNodes(registry, finalNodesClone, firstImport, options);
 
-	return finalNodesClone
-}
+  return finalNodesClone;
+};

@@ -1,13 +1,13 @@
-import { _THIRD_PARTY_MODULES, newLineNode } from '../constants'
+import { _THIRD_PARTY_MODULES, newLineNode } from '../constants';
+import { getImportNodesMatchedGroup } from './get-import-nodes-matched-group';
+import { getSortedImportSpecifiers } from './get-sorted-import-specifiers';
+import { getSortedNodesGroup } from './get-sorted-nodes-group';
+import { isSeparator, testingOnly } from './normalize-plugin-options';
 import type {
-	GetSortedNodesByImportOrder,
-	ImportGroups,
-	ImportOrLine,
-} from '../types'
-import { getImportNodesMatchedGroup } from './get-import-nodes-matched-group'
-import { getSortedImportSpecifiers } from './get-sorted-import-specifiers'
-import { getSortedNodesGroup } from './get-sorted-nodes-group'
-import { isSeparator, testingOnly } from './normalize-plugin-options'
+  GetSortedNodesByImportOrder,
+  ImportGroups,
+  ImportOrLine,
+} from '../types';
 
 /**
  * This function returns the given nodes, sorted in the order as indicated by
@@ -17,75 +17,75 @@ import { isSeparator, testingOnly } from './normalize-plugin-options'
  * @param options Options to influence the behavior of the sorting algorithm.
  */
 export const getSortedNodesByImportOrder: GetSortedNodesByImportOrder = (
-	originalNodes,
-	{ importOrder },
+  originalNodes,
+  { importOrder },
 ) => {
-	if (
-		process.env.NODE_ENV === 'test' &&
-		JSON.stringify(importOrder) !==
-			JSON.stringify(testingOnly.normalizeImportOrder(importOrder))
-	) {
-		throw new Error(
-			'API Misuse: getSortedNodesByImportOrder::importOrder option already should be normalized.',
-		)
-	}
+  if (
+    process.env.NODE_ENV === 'test' &&
+    JSON.stringify(importOrder) !==
+      JSON.stringify(testingOnly.normalizeImportOrder(importOrder))
+  ) {
+    throw new Error(
+      'API Misuse: getSortedNodesByImportOrder::importOrder option already should be normalized.',
+    );
+  }
 
-	const finalNodes: ImportOrLine[] = []
+  const finalNodes: ImportOrLine[] = [];
 
-	const importOrderGroups = importOrder.reduce<ImportGroups>(
-		(groups, regexp) =>
-			// Don't create a new group for explicit import separators
-			isSeparator(regexp)
-				? groups
-				: {
-						...groups,
-						[regexp]: [],
-				  },
-		{},
-	)
+  const importOrderGroups = importOrder.reduce<ImportGroups>(
+    (groups, regexp) =>
+      // Don't create a new group for explicit import separators
+      isSeparator(regexp)
+        ? groups
+        : {
+            ...groups,
+            [regexp]: [],
+          },
+    {},
+  );
 
-	// Select just the SPECIAL WORDS and the matchers
-	const sanitizedImportOrder = importOrder.filter(
-		(group) => !isSeparator(group) && group !== _THIRD_PARTY_MODULES,
-	)
+  // Select just the SPECIAL WORDS and the matchers
+  const sanitizedImportOrder = importOrder.filter(
+    (group) => !isSeparator(group) && group !== _THIRD_PARTY_MODULES,
+  );
 
-	// Assign import nodes into import order groups
-	for (const node of originalNodes) {
-		const matchedGroup = getImportNodesMatchedGroup(node, sanitizedImportOrder)
-		importOrderGroups[matchedGroup].push(node)
-	}
+  // Assign import nodes into import order groups
+  for (const node of originalNodes) {
+    const matchedGroup = getImportNodesMatchedGroup(node, sanitizedImportOrder);
+    importOrderGroups[matchedGroup].push(node);
+  }
 
-	for (const group of importOrder) {
-		// If it's a custom separator, all we need to do is add a newline
-		if (isSeparator(group)) {
-			const lastNode = finalNodes[finalNodes.length - 1]
-			// Avoid empty new line if first group is empty
-			if (!lastNode) {
-				continue
-			}
-			// Don't add multiple newlines
-			if (isNodeANewline(lastNode)) {
-				continue
-			}
-			finalNodes.push(newLineNode)
-			continue
-		}
+  for (const group of importOrder) {
+    // If it's a custom separator, all we need to do is add a newline
+    if (isSeparator(group)) {
+      const lastNode = finalNodes[finalNodes.length - 1];
+      // Avoid empty new line if first group is empty
+      if (!lastNode) {
+        continue;
+      }
+      // Don't add multiple newlines
+      if (isNodeANewline(lastNode)) {
+        continue;
+      }
+      finalNodes.push(newLineNode);
+      continue;
+    }
 
-		const groupNodes = importOrderGroups[group]
+    const groupNodes = importOrderGroups[group];
 
-		if (groupNodes.length === 0) continue
+    if (groupNodes.length === 0) continue;
 
-		const sortedInsideGroup = getSortedNodesGroup(groupNodes)
+    const sortedInsideGroup = getSortedNodesGroup(groupNodes);
 
-		// Sort the import specifiers
-		sortedInsideGroup.forEach((node) => getSortedImportSpecifiers(node))
+    // Sort the import specifiers
+    sortedInsideGroup.forEach((node) => getSortedImportSpecifiers(node));
 
-		finalNodes.push(...sortedInsideGroup)
-	}
+    finalNodes.push(...sortedInsideGroup);
+  }
 
-	return finalNodes
-}
+  return finalNodes;
+};
 
 function isNodeANewline(node: ImportOrLine) {
-	return node.type === 'ExpressionStatement'
+  return node.type === 'ExpressionStatement';
 }

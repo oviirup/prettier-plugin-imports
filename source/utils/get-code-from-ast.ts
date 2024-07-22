@@ -1,13 +1,9 @@
-import generate from '@babel/generator'
-import {
-	file,
-	type Directive,
-	type InterpreterDirective,
-	type Statement,
-} from '@babel/types'
-import { injectNewlinesRegex, newLineCharacters } from '../constants'
-import { getAllCommentsFromNodes } from './get-all-comments-from-nodes'
-import { removeNodesFromOriginalCode } from './remove-nodes-from-original-code'
+import generate from '@babel/generator';
+import { file } from '@babel/types';
+import { injectNewlinesRegex, newLineCharacters } from '../constants';
+import { getAllCommentsFromNodes } from './get-all-comments-from-nodes';
+import { removeNodesFromOriginalCode } from './remove-nodes-from-original-code';
+import type { Directive, InterpreterDirective, Statement } from '@babel/types';
 
 /**
  * This function generates a code string from the passed nodes.
@@ -20,62 +16,62 @@ import { removeNodesFromOriginalCode } from './remove-nodes-from-original-code'
  * `#!/bin/node`).
  */
 export const getCodeFromAst = ({
-	nodesToOutput,
-	allOriginalImportNodes = nodesToOutput,
-	originalCode,
-	directives,
-	interpreter,
+  nodesToOutput,
+  allOriginalImportNodes = nodesToOutput,
+  originalCode,
+  directives,
+  interpreter,
 }: {
-	nodesToOutput: Statement[]
-	allOriginalImportNodes?: Statement[]
-	originalCode: string
-	directives: Directive[]
-	interpreter?: InterpreterDirective | null
+  nodesToOutput: Statement[];
+  allOriginalImportNodes?: Statement[];
+  originalCode: string;
+  directives: Directive[];
+  interpreter?: InterpreterDirective | null;
 }) => {
-	const allCommentsFromImports = getAllCommentsFromNodes(nodesToOutput)
-	const allCommentsFromDirectives = getAllCommentsFromNodes(directives)
-	const allCommentsFromInterpreter = interpreter
-		? getAllCommentsFromNodes([interpreter])
-		: []
+  const allCommentsFromImports = getAllCommentsFromNodes(nodesToOutput);
+  const allCommentsFromDirectives = getAllCommentsFromNodes(directives);
+  const allCommentsFromInterpreter = interpreter
+    ? getAllCommentsFromNodes([interpreter])
+    : [];
 
-	const nodesToRemoveFromCode = [
-		...nodesToOutput,
-		...allOriginalImportNodes,
-		...allCommentsFromImports,
-		...allCommentsFromDirectives,
-		...allCommentsFromInterpreter,
-		...(interpreter ? [interpreter] : []),
-		...directives,
-	]
+  const nodesToRemoveFromCode = [
+    ...nodesToOutput,
+    ...allOriginalImportNodes,
+    ...allCommentsFromImports,
+    ...allCommentsFromDirectives,
+    ...allCommentsFromInterpreter,
+    ...(interpreter ? [interpreter] : []),
+    ...directives,
+  ];
 
-	const codeWithoutImportsAndInterpreter = removeNodesFromOriginalCode(
-		originalCode,
-		nodesToRemoveFromCode,
-	)
+  const codeWithoutImportsAndInterpreter = removeNodesFromOriginalCode(
+    originalCode,
+    nodesToRemoveFromCode,
+  );
 
-	const newAST = file({
-		type: 'Program',
-		body: nodesToOutput,
-		directives: directives,
-		sourceType: 'module',
-		interpreter: interpreter,
-		sourceFile: '',
-		leadingComments: [],
-		innerComments: [],
-		trailingComments: [],
-		start: 0,
-		end: 0,
-		loc: {
-			start: { line: 0, column: 0 },
-			end: { line: 0, column: 0 },
-		},
-	})
+  const newAST = file({
+    type: 'Program',
+    body: nodesToOutput,
+    directives: directives,
+    sourceType: 'module',
+    interpreter: interpreter,
+    sourceFile: '',
+    leadingComments: [],
+    innerComments: [],
+    trailingComments: [],
+    start: 0,
+    end: 0,
+    loc: {
+      start: { line: 0, column: 0 },
+      end: { line: 0, column: 0 },
+    },
+  });
 
-	const { code } = generate(newAST)
+  const { code } = generate(newAST);
 
-	const replacedCode = code.replace(injectNewlinesRegex, newLineCharacters)
+  const replacedCode = code.replace(injectNewlinesRegex, newLineCharacters);
 
-	const trailingCode = codeWithoutImportsAndInterpreter.trim()
+  const trailingCode = codeWithoutImportsAndInterpreter.trim();
 
-	return replacedCode + trailingCode
-}
+  return replacedCode + trailingCode;
+};

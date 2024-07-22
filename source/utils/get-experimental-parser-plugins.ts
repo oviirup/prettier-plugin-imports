@@ -1,4 +1,4 @@
-import type { ParserPlugin, ParserPluginWithOptions } from '@babel/parser'
+import type { ParserPlugin, ParserPluginWithOptions } from '@babel/parser';
 
 /**
  * Returns a list of babel parser plugin names
@@ -6,27 +6,27 @@ import type { ParserPlugin, ParserPluginWithOptions } from '@babel/parser'
  * @returns list of parser plugins to be passed to babel parser
  */
 export const getExperimentalParserPlugins = (
-	importOrderParsers: string[],
+  importOrderParsers: string[],
 ): ParserPlugin[] => {
-	return importOrderParsers.map((pluginNameOrJson) => {
-		// ParserPlugin can be either a string or and array of [name: string, options: object]
-		// in prettier options the array will be sent in a JSON string
-		const isParserPluginWithOptions = pluginNameOrJson.startsWith('[')
+  return importOrderParsers.map((pluginNameOrJson) => {
+    // ParserPlugin can be either a string or and array of [name: string, options: object]
+    // in prettier options the array will be sent in a JSON string
+    const isParserPluginWithOptions = pluginNameOrJson.startsWith('[');
 
-		let plugin: ParserPlugin
-		if (isParserPluginWithOptions) {
-			try {
-				plugin = JSON.parse(pluginNameOrJson) as ParserPluginWithOptions
-			} catch (e) {
-				throw Error('Invalid JSON in importOrderParsers: ' + pluginNameOrJson)
-			}
-		} else {
-			plugin = pluginNameOrJson as ParserPlugin
-		}
+    let plugin: ParserPlugin;
+    if (isParserPluginWithOptions) {
+      try {
+        plugin = JSON.parse(pluginNameOrJson) as ParserPluginWithOptions;
+      } catch (e) {
+        throw Error('Invalid JSON in importOrderParsers: ' + pluginNameOrJson);
+      }
+    } else {
+      plugin = pluginNameOrJson as ParserPlugin;
+    }
 
-		return plugin
-	})
-}
+    return plugin;
+  });
+};
 
 /**
  * Checks whether a specified plugin is included in importOrderParsers.
@@ -36,23 +36,23 @@ export const getExperimentalParserPlugins = (
  * @returns true if the plugin is in the list
  */
 export const hasPlugin = (
-	importOrderParsers: string[],
-	pluginName: string,
+  importOrderParsers: string[],
+  pluginName: string,
 ): boolean => {
-	for (const pluginNameOrJson of importOrderParsers) {
-		const isParserPluginWithOptions = pluginNameOrJson.startsWith('[')
-		let plugin
+  for (const pluginNameOrJson of importOrderParsers) {
+    const isParserPluginWithOptions = pluginNameOrJson.startsWith('[');
+    let plugin;
 
-		if (isParserPluginWithOptions) {
-			try {
-				plugin = JSON.parse(pluginNameOrJson)[0]
-			} catch (e) {
-				throw Error('Invalid JSON in importOrderParsers: ' + pluginNameOrJson)
-			}
-		} else {
-			plugin = pluginNameOrJson as ParserPlugin
-		}
-		if (plugin === pluginName) return true
-	}
-	return false
-}
+    if (isParserPluginWithOptions) {
+      try {
+        plugin = JSON.parse(pluginNameOrJson)[0];
+      } catch (e) {
+        throw Error('Invalid JSON in importOrderParsers: ' + pluginNameOrJson);
+      }
+    } else {
+      plugin = pluginNameOrJson as ParserPlugin;
+    }
+    if (plugin === pluginName) return true;
+  }
+  return false;
+};

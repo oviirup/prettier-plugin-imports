@@ -1,44 +1,44 @@
-import type { parse as Parse } from '@vue/compiler-sfc'
-import { ImportOrderParserPlugin } from '../plugin'
-import { PrettierOptions } from '../types'
-import { hasPlugin } from '../utils/get-experimental-parser-plugins'
-import { preprocessor } from './preprocessor'
+import { ImportOrderParserPlugin } from '../plugin';
+import { PrettierOptions } from '../types';
+import { hasPlugin } from '../utils/get-experimental-parser-plugins';
+import { preprocessor } from './preprocessor';
+import type { parse as Parse } from '@vue/compiler-sfc';
 
 export function vuePreprocessor(code: string, options: PrettierOptions) {
-	let preprocessedCode = code
-	try {
-		const { parse }: { parse: typeof Parse } = require('@vue/compiler-sfc')
-		const { descriptor } = parse(code)
+  let preprocessedCode = code;
+  try {
+    const { parse }: { parse: typeof Parse } = require('@vue/compiler-sfc');
+    const { descriptor } = parse(code);
 
-		if (descriptor.script) {
-			preprocessedCode = sortScript(
-				descriptor.script,
-				preprocessedCode,
-				options,
-			)
-		}
+    if (descriptor.script) {
+      preprocessedCode = sortScript(
+        descriptor.script,
+        preprocessedCode,
+        options,
+      );
+    }
 
-		if (descriptor.scriptSetup) {
-			preprocessedCode = sortScript(
-				descriptor.scriptSetup,
-				preprocessedCode,
-				options,
-			)
-		}
+    if (descriptor.scriptSetup) {
+      preprocessedCode = sortScript(
+        descriptor.scriptSetup,
+        preprocessedCode,
+        options,
+      );
+    }
 
-		return preprocessedCode
-	} catch (err) {
-		if ((err as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
-			console.warn(
-				'[prettier-plugin-imports]: Could not process .vue file.  Please be sure that "@vue/compiler-sfc" is installed in your project.',
-			)
-			throw err
-		}
-	}
+    return preprocessedCode;
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
+      console.warn(
+        '[prettier-plugin-imports]: Could not process .vue file.  Please be sure that "@vue/compiler-sfc" is installed in your project.',
+      );
+      throw err;
+    }
+  }
 }
 
 function isTS(lang?: string) {
-	return lang === 'ts' || lang === 'tsx'
+  return lang === 'ts' || lang === 'tsx';
 }
 
 /**
@@ -53,36 +53,36 @@ function isTS(lang?: string) {
  * @returns Original code with sorted imports in the script provided
  */
 function sortScript(
-	{ content, lang }: { content: string; lang?: string },
-	code: string,
-	options: PrettierOptions,
+  { content, lang }: { content: string; lang?: string },
+  code: string,
+  options: PrettierOptions,
 ) {
-	const { importOrderParsers = [] } = options
-	let pluginClone = [...importOrderParsers]
-	const newPlugins: ImportOrderParserPlugin[] = []
+  const { importOrderParsers = [] } = options;
+  let pluginClone = [...importOrderParsers];
+  const newPlugins: ImportOrderParserPlugin[] = [];
 
-	if (!isTS(lang) || lang === 'tsx') {
-		newPlugins.push('jsx')
-	} else {
-		// Remove jsx if typescript and not tsx
-		pluginClone = pluginClone.filter((p) => p !== 'jsx')
-	}
+  if (!isTS(lang) || lang === 'tsx') {
+    newPlugins.push('jsx');
+  } else {
+    // Remove jsx if typescript and not tsx
+    pluginClone = pluginClone.filter((p) => p !== 'jsx');
+  }
 
-	newPlugins.push(...pluginClone)
+  newPlugins.push(...pluginClone);
 
-	if (isTS(lang)) {
-		if (!hasPlugin(newPlugins, 'typescript')) {
-			newPlugins.push('typescript')
-		}
-	}
+  if (isTS(lang)) {
+    if (!hasPlugin(newPlugins, 'typescript')) {
+      newPlugins.push('typescript');
+    }
+  }
 
-	const adjustedOptions = {
-		...options,
-		importOrderParsers: newPlugins,
-	}
+  const adjustedOptions = {
+    ...options,
+    importOrderParsers: newPlugins,
+  };
 
-	return code.replace(
-		content,
-		() => `\n${preprocessor(content, adjustedOptions)}\n`,
-	)
+  return code.replace(
+    content,
+    () => `\n${preprocessor(content, adjustedOptions)}\n`,
+  );
 }
