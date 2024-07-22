@@ -5,8 +5,8 @@
     "^[./]",
     "<TYPES>"
   ],
-  "importOrderTSVersion": "5.0.0",
-  "plugins": ["./plugin.js"],
+  "importOrderTSVersion": "5.5.3",
+  "plugins": ["prettier-plugin-pkg", "prettier-plugin-jsdoc", "./plugin.js"],
   "printWidth": 80,
   "singleQuote": true,
   "tabWidth": 2,

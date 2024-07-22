@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on:
   - push
@@ -8,34 +8,25 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: 🚀 Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-          registry-url: https://registry.npmjs.org/
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v3
 
-      - name: 🛠️ Install PNPM
-        uses: pnpm/action-setup@v2
+      - name: 🟡 Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          version: 8.14
+          version: 9.6.0
           run_install: false
 
-      - name: ⚙️ Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: 🔄 Setup PNPM cache
-        uses: actions/cache@v3
+      - name: 🟢 Setup node
+        uses: actions/setup-node@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          node-version: 20.x
+          cache: 'pnpm'
 
-      - name: 📦 Installing dependencies
-        run: pnpm install
+      - name: ⚙️ Install & Build
+        run: |
+          pnpm install
+          pnpm build
 
       - name: 🧪 Running tests
         run: pnpm run test
