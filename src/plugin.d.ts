@@ -5,12 +5,13 @@ export type ImportOrderParserPlugin =
   | Extract<ParserPlugin, string>
   | `[${string},${string}]`;
 
+// prettier-ignore
 export interface PluginConfig {
   /**
    * A collection of Regular expressions in string format.
    *
    * ```json
-   * "importOrder":["^@core/(.*)$","^@server/(.*)$","^@ui/(.*)$", "^[./]"],;
+   * "importOrder":["^@core/(.*)$","^@server/(.*)$","^@ui/(.*)$","^[./]"],;
    * ```
    *
    * _Default:_ `[]`
@@ -25,7 +26,7 @@ export interface PluginConfig {
    * appropriate position:
    *
    * ```json
-   * "importOrder":["^@core/(.*)$","<third_party_modules>","^@server/(.*)$", "^@ui/(.*)$", "^[./]"],;
+   * "importOrder":["^@core/(.*)$","<THIRD_PARTY_MODULES>","^@server/(.*)$","^@ui/(.*)$","^[./]"],;
    * ```
    *
    * If you would like to order type imports differently from value imports, you
@@ -34,7 +35,7 @@ export interface PluginConfig {
    * and lastly local value imports:
    *
    * ```json
-   * "importOrder":["<TYPES>","<types>^[./]","<THIRD_PARTY_MODULES>", "^[./]"],;
+   * "importOrder":["<TYPES>","<TYPES>^[./]","<THIRD_PARTY_MODULES>","^[./]"],;
    * ```
    */
   importOrder?: string[];

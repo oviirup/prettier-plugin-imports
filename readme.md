@@ -1,6 +1,8 @@
-# Prettier Plugin Imports <!-- omit in toc -->
+# Prettier Plugin Imports 
 
 [![version](https://img.shields.io/npm/v/prettier-plugin-imports)](https://www.npmjs.com/package/prettier-plugin-imports)
+![CI status](https://img.shields.io/github/actions/workflow/status/oviirup/prettier-plugin-imports/ci.yml?label=CI)
+
 
 A prettier plugin to sort import declarations by provided Regular Expression order, while preserving side-effect import order.
 
@@ -18,7 +20,7 @@ This project is based on [@trivago/prettier-plugin-sort-imports](https://github.
 We welcome your [contributions](.github/contributing.md)!
 
 <details>
-  <summary><h3>Table of contents</h3></summary>
+  <summary>Table of contents</summary>
   <ul>
     <li><a href="#sample">Sample</a>
       <ul>

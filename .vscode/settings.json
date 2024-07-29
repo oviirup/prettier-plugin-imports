@@ -3,6 +3,7 @@
   "explorer.sortOrder": "type",
   // file explorer nesting
   "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
     "*.ts": "$(capture).js, $(capture).mjs, $(capture).*.ts, $(capture).ts.snap",
     "*.js": "$(capture).js, $(capture).mjs, $(capture).*.ts, $(capture).ts.snap"
