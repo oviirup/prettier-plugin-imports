@@ -14,19 +14,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: bun run format:check
+      - run: |
+          bun run build
+          bun run format:check
   types-check:
     name: 🪶 Checking types
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: bun run types:check
+      - run: |
+          bun run types:check
   test:
     name: 🧪 Running tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: bun run build
-      - run: bun run test
+      - run: |
+          bun run build
+          bun run test
