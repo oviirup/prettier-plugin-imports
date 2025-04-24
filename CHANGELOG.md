@@ -1,5 +1,11 @@
 # prettier-plugin-imports
 
+## 4.3.1
+
+### Patch Changes
+
+- [`9ea58c0`](https://github.com/oviirup/prettier-plugin-imports/commit/9ea58c012f162d089f366d3a2f099e6af45f8b29) Thanks [@oviirup](https://github.com/oviirup)! - ♻️ re-publish
+
 ## 4.3.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "prettier-plugin-imports",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "description": "A prettier plugins to sort imports in provided RegEx order",
   "repository": "oviirup/prettier-plugin-imports",
   "author": "Avirup Ghosh (https://github.com/oviirup)",
