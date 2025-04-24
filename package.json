@@ -25,7 +25,7 @@
     "javascript"
   ],
   "scripts": {
-    "build": "bunchee -m",
+    "build": "bunchee -m --no-sourcemap",
     "build:watch": "bunchee -w",
     "clean": "npx rimraf dist tests/**/*.snap",
     "format": "prettier . -w -u",

@@ -1,12 +1,8 @@
-import { parsers as babelParsers } from 'prettier/parser-babel';
-import { parsers as flowParsers } from 'prettier/parser-flow';
-import { parsers as htmlParsers } from 'prettier/parser-html';
-import { parsers as typescriptParsers } from 'prettier/parser-typescript';
-import {
-  BUILTIN_MODULES_SPECIAL_WORD,
-  DEFAULT_IMPORT_ORDER,
-  THIRD_PARTY_MODULES_SPECIAL_WORD,
-} from './constants';
+import { parsers as babelParsers } from 'prettier/plugins/babel';
+import { parsers as flowParsers } from 'prettier/plugins/flow';
+import { parsers as htmlParsers } from 'prettier/plugins/html';
+import { parsers as typescriptParsers } from 'prettier/plugins/typescript';
+import { DEFAULT_IMPORT_ORDER } from './constants';
 import { defaultPreprocessor } from './preprocessors/default';
 import { vuePreprocessor } from './preprocessors/vue';
 import type { PrettierOptions } from './types';
