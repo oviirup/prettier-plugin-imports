@@ -1,5 +1,11 @@
 # prettier-plugin-imports
 
+## 4.3.3
+
+### Patch Changes
+
+- [`17ab2a0`](https://github.com/oviirup/prettier-plugin-imports/commit/17ab2a0492a0793b26427c9e0ce99ea2eb7eaf7f) Thanks [@oviirup](https://github.com/oviirup)! - 🐛 fix module resolution issue
+
 ## 4.3.2
 
 ### Patch Changes
