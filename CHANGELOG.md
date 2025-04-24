@@ -1,5 +1,11 @@
 # prettier-plugin-imports
 
+## 4.3.2
+
+### Patch Changes
+
+- [`c8740b7`](https://github.com/oviirup/prettier-plugin-imports/commit/c8740b760d0c9c30f5cf5f5d41a48514101ea102) Thanks [@oviirup](https://github.com/oviirup)! - 🐛 fix missing module exports
+
 ## 4.3.1
 
 ### Patch Changes
