@@ -20,27 +20,21 @@ We welcome your [contributions](.github/contributing.md)!
 
 <details>
   <summary>Table of contents</summary>
-  <ul>
-    <li><a href="#sample">Sample</a>
-      <ul>
-        <li><a href="#input">Input</a></li>
-        <li><a href="#output">Output</a></li>
-      </ul>
-    </li>
-    <li><a href="#install">Install</a></li>
-    <li><a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#how-does-import-sort-work">How does import sort work?</a></li>
-        <li><a href="#options">Options</a></li>
-        <li><a href="#prevent-imports-from-being-sorted">Prevent imports from being sorted</a></li>
-        <li><a href="#comments">Comments</a></li>
-      </ul>
-    </li>
-    <li><a href="#faq--troubleshooting">FAQ / Troubleshooting</a></li>
-    <li><a href="#compatibility">Compatibility</a></li>
-    <li><a href="#contribution">Contribution</a></li>
-    <li><a href="#disclaimer">Disclaimer</a></li>
-  </ul>
+ 
+- [Sample](#sample)
+  - [Input](#input)
+  - [Output](#output)
+- [Install](#install)
+- [Usage](#usage)
+  - [How does import sort work?](#how-does-import-sort-work)
+  - [Options](#options)
+  - [Prevent imports from being sorted](#prevent-imports-from-being-sorted)
+  - [Comments](#comments)
+- [FAQ / Troubleshooting](#faq--troubleshooting)
+- [Compatibility](#compatibility)
+- [Contribution](#contribution)
+- [Disclaimer](#disclaimer)
+
 </details>
 
 ## Sample

@@ -1,4 +1,8 @@
 tests/**/*
-!tests/*
+src/**/*.test.*
+
+# package lock files
 pnpm-lock.yaml
-readme.md
+package-lock.json
+bun.lock
+yarn.lock
